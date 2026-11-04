@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Cairo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-50: #effaf5;
+  --color-brand-100: #d9f2e7;
+  --color-brand-200: #b2e3cf;
+  --color-brand-300: #7ccdae;
+  --color-brand-400: #3fb387;
+  --color-brand-500: #16976b;
+  --color-brand-600: #0e7c5a;
+  --color-brand-700: #0b6449;
+  --color-brand-800: #0a503b;
+  --color-brand-900: #083f2f;
+
+  --color-accent-50: #fff4ed;
+  --color-accent-100: #ffe3d2;
+  --color-accent-500: #ff6b2c;
+  --color-accent-600: #e85512;
+  --color-accent-700: #c2440b;
+
+  --color-ink: #15211c;
+  --color-muted: #5f6d67;
+  --color-line: #e3e8e5;
+  --color-canvas: #f5f6f4;
+  --color-danger: #c93a2b;
+  --color-danger-50: #fdeeec;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+  input, select, textarea, button {
+    font: inherit;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Shared building blocks. Defined as utilities so they can be combined and overridden. */
+@utility card {
+  @apply bg-white rounded-2xl border border-line;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 h-11 font-bold text-sm transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+}
+@utility btn-primary {
+  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+}
+@utility btn-outline {
+  @apply btn border border-line bg-white text-ink hover:border-brand-300 hover:bg-brand-50;
+}
+@utility btn-ghost {
+  @apply btn text-brand-700 hover:bg-brand-50;
+}
+@utility field {
+  @apply block w-full rounded-xl border border-line bg-white px-3.5 h-11 text-sm placeholder:text-muted/70 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100;
+}
+@utility label {
+  @apply block text-sm font-semibold mb-1.5;
+}
+@utility chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3.5 h-9 text-sm font-semibold whitespace-nowrap transition;
+}
+@utility chip-active {
+  @apply border-brand-600 bg-brand-600 text-white;
+}
+@utility section-title {
+  @apply text-lg md:text-xl font-extrabold;
+}
