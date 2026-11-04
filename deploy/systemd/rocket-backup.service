@@ -1,0 +1,8 @@
+[Unit]
+Description=Rocket Market: daily SQLite backup
+ConditionPathExists=/opt/rocket/deploy/scripts/backup-db.sh
+
+[Service]
+Type=oneshot
+User=__USER__
+ExecStart=/bin/bash /opt/rocket/deploy/scripts/backup-db.sh

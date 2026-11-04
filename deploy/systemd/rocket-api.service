@@ -1,0 +1,22 @@
+[Unit]
+Description=Rocket Market API (Django + gunicorn)
+ConditionPathExists=/opt/rocket/backend/manage.py
+After=network.target
+
+[Service]
+Type=simple
+User=__USER__
+Group=www-data
+WorkingDirectory=/opt/rocket/backend
+Environment=DJANGO_SETTINGS_MODULE=config.settings.prod
+Environment=DJANGO_ENV_FILE=/opt/rocket/.env
+ExecStart=/opt/rocket/venv/bin/gunicorn config.wsgi:application \
+    --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 60 \
+    --access-logfile - --error-logfile -
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=3
+UMask=0022
+
+[Install]
+WantedBy=multi-user.target

@@ -1,25 +1,21 @@
-# Nuxt
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
-dev-dist
+# Backend
+backend/.venv/
+backend/.env
+backend/db.sqlite3*
+backend/.cache/
+backend/media/
+backend/staticfiles/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
 
-# Node
-node_modules
+# Build output from CI/deploy
+*.tgz
 
-# Logs
-logs
-*.log
-
-# Misc
+# Editors / OS
 .DS_Store
-.fleet
-.idea
-
-# Local env files
-.env
-.env.*
-!.env.example
+.idea/
+.vscode/

@@ -1,0 +1,69 @@
+# Full stack in Docker for local use: API + background jobs + Redis + storefront.
+# Not used on the server yet (the VM runs systemd services, see deploy/).
+#
+#   make docker-up      → storefront http://localhost:3000, API http://localhost:8000/api/docs/
+#   make docker-down
+
+x-api: &api
+  build: ./backend
+  restart: unless-stopped
+  environment: &api-env
+    SECRET_KEY: ${SECRET_KEY:-docker-dev-secret-change-me}
+    ALLOWED_HOSTS: localhost,127.0.0.1,api
+    CORS_ALLOWED_ORIGINS: http://localhost:3000
+    CSRF_TRUSTED_ORIGINS: http://localhost:8000
+    STOREFRONT_URL: http://localhost:3000
+    MEDIA_URL: http://localhost:8000/media/
+    SERVE_MEDIA: "true"
+    SECURE_HSTS_SECONDS: "0"
+    REDIS_URL: redis://redis:6379/0
+    CELERY_BROKER_URL: redis://redis:6379/1
+    OTP_FIXED_CODE: "1234"
+    PAYMENT_PROVIDER: dummy
+    PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-docker-webhook-secret}
+  volumes:
+    - api-data:/data
+  depends_on:
+    - redis
+
+services:
+  api:
+    <<: *api
+    ports:
+      - "8000:8000"
+
+  worker:
+    <<: *api
+    command: celery -A config worker --loglevel=info
+    depends_on: [api, redis]
+
+  beat:
+    <<: *api
+    command: celery -A config beat --loglevel=info --schedule /data/celerybeat-schedule
+    depends_on: [api, redis]
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+  web:
+    build:
+      context: ./storefront
+      args:
+        NUXT_PUBLIC_SITE_URL: http://localhost:3000
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_API_BASE: http://localhost:8000/api/v1
+      NUXT_API_BASE_SERVER: http://api:8000/api/v1
+      NUXT_PUBLIC_SITE_URL: http://localhost:3000
+      NUXT_MOCK_API: "false"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  api-data:
+  redis-data:

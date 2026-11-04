@@ -1,0 +1,38 @@
+name: SSH setup
+description: Writes the deploy key and an SSH alias "rocket" for the production VM.
+inputs:
+  host: { description: VM address, required: true }
+  user: { description: SSH user, required: true }
+  key: { description: Private key (DEPLOY_SSH_KEY secret), required: true }
+  known_hosts: { description: Pinned host key (optional DEPLOY_KNOWN_HOSTS secret), required: false, default: "" }
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        HOST: ${{ inputs.host }}
+        USER_NAME: ${{ inputs.user }}
+        KEY: ${{ inputs.key }}
+        KNOWN_HOSTS: ${{ inputs.known_hosts }}
+      run: |
+        if [ -z "$KEY" ]; then
+          echo "::error::The DEPLOY_SSH_KEY secret is missing. See deploy/README.md, step 2."
+          exit 1
+        fi
+        install -m 700 -d ~/.ssh
+        printf '%s\n' "$KEY" > ~/.ssh/rocket_deploy
+        chmod 600 ~/.ssh/rocket_deploy
+        if [ -n "$KNOWN_HOSTS" ]; then
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+        else
+          ssh-keyscan -T 20 -H "$HOST" > ~/.ssh/known_hosts 2>/dev/null
+        fi
+        cat > ~/.ssh/config <<CFG
+        Host rocket
+          HostName $HOST
+          User $USER_NAME
+          IdentityFile ~/.ssh/rocket_deploy
+          IdentitiesOnly yes
+          ServerAliveInterval 30
+        CFG
+        ssh rocket 'echo "Connected to $(hostname)"'
