@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.orders",
     "apps.payments",
     "apps.notifications",
+    "apps.support",
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "apps.orders.tasks.release_expired_reservations",
         "schedule": 60.0,
     },
+    "remind-unread-support-replies": {
+        "task": "apps.support.tasks.remind_unread_replies",
+        "schedule": 60.0,
+    },
 }
 
 # ---- Auth ----
@@ -177,6 +182,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "otp": env.str("OTP_IP_RATE", default="20/hour"),
         "login": "10/minute",
+        "chat": env.str("CHAT_MESSAGE_RATE", default="30/minute"),
     },
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Proxies in front of Django (nginx = 1), so throttling sees the real client IP.
@@ -202,12 +208,13 @@ SPECTACULAR_SETTINGS = {
         "OrderStatusEnum": "apps.orders.models.Order.Status",
         "PaymentRecordStatusEnum": "apps.payments.models.Payment.Status",
         "NotificationStatusEnum": "apps.notifications.models.NotificationLog.Status",
+        "ConversationStatusEnum": "apps.support.models.Conversation.Status",
     },
 }
 
 # ---- CORS (storefront and admin dashboard origins) ----
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"])
-CORS_URLS_REGEX = r"^/api/.*$"
+CORS_URLS_REGEX = r"^/(api|media)/.*$"  # media too, for photos in the Flutter web build
 
 # ---- Email ----
 EMAIL_BACKEND = env.str("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
@@ -234,6 +241,12 @@ PAYMENT_PROVIDER = env.str("PAYMENT_PROVIDER", default="dummy")
 PAYMENT_WEBHOOK_SECRET = env.str("PAYMENT_WEBHOOK_SECRET", default="change-me")
 STOCK_RESERVATION_MINUTES = env.int("STOCK_RESERVATION_MINUTES", default=15)
 STAFF_ALERT_EMAILS = env.list("STAFF_ALERT_EMAILS", default=[])
+
+# Support chat
+SUPPORT_IMAGE_MAX_MB = env.int("SUPPORT_IMAGE_MAX_MB", default=8)
+SUPPORT_IMAGE_MAX_SIDE = env.int("SUPPORT_IMAGE_MAX_SIDE", default=1600)
+# Text the customer when a staff reply stays unread this long (0 turns it off).
+SUPPORT_REPLY_REMINDER_MINUTES = env.int("SUPPORT_REPLY_REMINDER_MINUTES", default=10)
 
 # ---- Logging ----
 LOGGING = {

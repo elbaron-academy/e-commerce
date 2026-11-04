@@ -124,6 +124,9 @@ function reorder() {
           <button type="button" class="btn-primary w-full" @click="reorder">
             <AppIcon name="refresh" :size="18" /> {{ t('orders.reorder') }}
           </button>
+          <NuxtLinkLocale :to="{ path: '/chat', query: { order: order.id } }" class="btn-outline w-full">
+            <AppIcon name="chat" :size="18" /> {{ t('chat.helpOrder') }}
+          </NuxtLinkLocale>
         </aside>
       </div>
     </template>

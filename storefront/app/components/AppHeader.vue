@@ -4,6 +4,8 @@ const route = useRoute()
 const auth = useAuthStore()
 const { data: categories } = useCategories()
 const onSearchPage = computed(() => /^\/(en\/)?search/.test(route.path))
+// Pages like the chat need all the height they can get.
+const compact = computed(() => !!route.meta.compactHeader)
 </script>
 
 <template>
@@ -18,6 +20,13 @@ const onSearchPage = computed(() => /^\/(en\/)?search/.test(route.path))
 
       <div class="ms-auto md:ms-0 flex items-center gap-1">
         <LangSwitch />
+        <NuxtLinkLocale to="/chat" class="btn-ghost h-10 px-2.5 md:px-3" :aria-label="t('chat.title')">
+          <span class="relative">
+            <AppIcon name="chat" :size="22" />
+            <ChatBadge class="absolute -top-2 -end-2.5" />
+          </span>
+          <span class="hidden lg:inline">{{ t('chat.open') }}</span>
+        </NuxtLinkLocale>
         <NuxtLinkLocale :to="auth.isLoggedIn ? '/account' : '/login'" class="hidden md:inline-flex btn-ghost h-10 px-3">
           <AppIcon name="user" :size="20" />
           <span>{{ auth.isLoggedIn ? (auth.user?.name || t('nav.account')) : t('header.login') }}</span>
@@ -32,14 +41,14 @@ const onSearchPage = computed(() => /^\/(en\/)?search/.test(route.path))
       </div>
     </div>
 
-    <div v-if="!onSearchPage" class="md:hidden px-4 pb-3">
+    <div v-if="!onSearchPage && !compact" class="md:hidden px-4 pb-3">
       <NuxtLinkLocale to="/search" class="field flex items-center gap-2.5 bg-canvas border-transparent text-muted">
         <AppIcon name="search" :size="20" />
         <span class="truncate">{{ t('header.searchPlaceholder') }}</span>
       </NuxtLinkLocale>
     </div>
 
-    <nav v-if="categories?.length" class="hidden md:block border-t border-line">
+    <nav v-if="categories?.length && !compact" class="hidden md:block border-t border-line">
       <ul class="max-w-6xl mx-auto px-4 flex gap-1 overflow-x-auto no-scrollbar">
         <li>
           <NuxtLinkLocale to="/categories" class="flex items-center gap-1.5 px-3 h-11 text-sm font-bold text-brand-700 whitespace-nowrap">

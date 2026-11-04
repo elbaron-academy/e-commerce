@@ -15,6 +15,7 @@ import '../features/catalog/presentation/search_page.dart';
 import '../features/checkout/presentation/checkout_page.dart';
 import '../features/checkout/presentation/mock_payment_page.dart';
 import '../features/orders/presentation/order_detail_page.dart';
+import '../features/support/presentation/chat_page.dart';
 import '../features/orders/presentation/orders_page.dart';
 import 'main_shell.dart';
 
@@ -31,6 +32,7 @@ GoRouter createRouter(SessionCubit session) {
       final needsAuth =
           location.startsWith('/checkout') ||
           location.startsWith('/payment') ||
+          location.startsWith('/chat') ||
           RegExp(r'^/orders/\d+').hasMatch(location);
       if (needsAuth && !loggedIn) {
         return Uri(path: '/login', queryParameters: {'redirect': state.uri.toString()}).toString();
@@ -91,6 +93,10 @@ GoRouter createRouter(SessionCubit session) {
       ),
       GoRoute(path: '/login', builder: (_, _) => const LoginPage()),
       GoRoute(path: '/checkout', builder: (_, _) => const CheckoutPage()),
+      GoRoute(
+        path: '/chat',
+        builder: (_, state) => ChatPage(orderId: int.tryParse(state.uri.queryParameters['order'] ?? '')),
+      ),
       GoRoute(
         path: '/payment/mock',
         builder: (_, state) => MockPaymentPage(orderId: int.parse(state.uri.queryParameters['order'] ?? '0')),

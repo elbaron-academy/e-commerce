@@ -10,6 +10,7 @@ import '../../../core/widgets/common.dart';
 import '../../../core/widgets/load_state.dart';
 import '../../checkout/domain/delivery.dart';
 import '../../settings/locale_cubit.dart';
+import '../../support/presentation/chat_entry.dart';
 import '../domain/catalog_repository.dart';
 import '../domain/entities.dart';
 import 'widgets/category_tile.dart';
@@ -105,6 +106,7 @@ class HomeHeader extends StatelessWidget {
                 icon: const Icon(Icons.language, size: 20),
                 label: Text(l10n.headerSwitchLang),
               ),
+              const ChatButton(),
             ],
           ),
           const SizedBox(height: 10),

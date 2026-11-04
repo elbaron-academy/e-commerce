@@ -1,0 +1,88 @@
+{
+ "conversation": {
+  "id": 4,
+  "status": "open",
+  "staff_last_read": 0,
+  "customer_last_read": 10
+ },
+ "messages": [
+  {
+   "id": 5,
+   "conversation": 3,
+   "kind": "text",
+   "event": "",
+   "sender": "customer",
+   "sender_name": "منى",
+   "body": "السلام عليكم، طلبي اتأخر شوية. ممكن أعرف هيوصل امتى؟",
+   "image": null,
+   "order": null,
+   "created_at": "2026-11-04T14:53:41.972772+02:00"
+  },
+  {
+   "id": 6,
+   "conversation": 3,
+   "kind": "text",
+   "event": "",
+   "sender": "customer",
+   "sender_name": "منى",
+   "body": "ودي صورة البرتقال اللي وصلني مضروب",
+   "image": {
+    "url": "http://localhost:8000/media/support/e4861d9a91874009ae3d1433f3591ff0.jpg",
+    "width": 1200,
+    "height": 900
+   },
+   "order": null,
+   "created_at": "2026-11-04T14:53:42.054691+02:00"
+  },
+  {
+   "id": 7,
+   "conversation": 3,
+   "kind": "text",
+   "event": "",
+   "sender": "staff",
+   "sender_name": "Salma",
+   "body": "أهلاً يا منى 👋 آسفين على التأخير. المندوب في الطريق وهيوصلك خلال ٢٠ دقيقة، وهنبعتلك برتقال بدل المضروب.",
+   "image": null,
+   "order": null,
+   "created_at": "2026-11-04T14:53:43.069631+02:00"
+  },
+  {
+   "id": 8,
+   "conversation": 3,
+   "kind": "text",
+   "event": "",
+   "sender": "staff",
+   "sender_name": "Salma",
+   "body": "وكمان ضفنالك كوبون خصم 10% على الطلب الجاي: ROCKET10",
+   "image": null,
+   "order": null,
+   "created_at": "2026-11-04T14:53:52.763032+02:00"
+  },
+  {
+   "id": 9,
+   "conversation": 3,
+   "kind": "event",
+   "event": "closed",
+   "sender": "staff",
+   "sender_name": "Salma",
+   "body": "",
+   "image": null,
+   "order": null,
+   "created_at": "2026-11-04T14:53:56.742601+02:00"
+  },
+  {
+   "id": 10,
+   "conversation": 4,
+   "kind": "text",
+   "event": "",
+   "sender": "customer",
+   "sender_name": "منى",
+   "body": "شكراً، وصل الطلب 🙏",
+   "image": null,
+   "order": null,
+   "created_at": "2026-11-04T14:53:57.291589+02:00"
+  }
+ ],
+ "has_older": false,
+ "unread": 0
+}

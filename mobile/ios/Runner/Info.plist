@@ -9,6 +9,10 @@
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ar</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To send a photo to the Rocket support team in the chat.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To take a photo for the Rocket support team in the chat.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Rocket Market uses your location to fill in your delivery address.</string>
 	<key>NSAppTransportSecurity</key>

@@ -76,6 +76,7 @@ lib/
     account/    profile, addresses (with current location), language
     checkout/   delivery or pickup, address, delivery window, payment, place order
     orders/     my orders, order details, status timeline, reorder
+    support/    chat with the support team, unread badge
     settings/   language
   l10n/         arb/ (source texts) and gen/ (generated, run `flutter gen-l10n` after editing)
 ```
@@ -88,6 +89,7 @@ lib/
 - **Offline:** home, categories, products, search and delivery info are cached after the first load and shown with an "offline" banner when there's no connection.
 - **Payment:** cash on delivery goes straight to the order. Card and wallet open the gateway page. Until a gateway is chosen (BE-504), that is the API's test payment page.
 - **Order status:** the details screen refreshes every 20 seconds while it's open, and the lists support pull to refresh.
+- **Support chat:** opened from the home header, the account screen or an order (the first message is then about that order). Messages appear right away and get a retry button if sending fails; photos come from the camera or the gallery. The chat checks for replies every 3 seconds while it's on screen. The unread badge (home header, Account tab) checks every minute while the app is open. Push notifications for replies come with FCM (MOB-504).
 
 ## Sprint plan coverage
 
@@ -111,6 +113,7 @@ lib/
 | MOB-601, 603 Orders, timeline, pull to refresh | Done. Status refreshes by polling until push exists |
 | MOB-602 PDF invoice | Not yet (the API doesn't make invoices yet, BE-603) |
 | MOB-701, 702 Store listing and release | Not yet |
+| Support chat (not in the plan) | Done: text, photos, order references, read ticks, unread badge |
 
 ## Releasing
 

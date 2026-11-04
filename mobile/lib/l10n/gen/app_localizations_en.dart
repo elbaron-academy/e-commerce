@@ -709,4 +709,99 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ordersPullToRefresh => 'Pull down to refresh the status';
+
+  @override
+  String get chatTitle => 'Chat with us';
+
+  @override
+  String get chatSubtitle => 'The Rocket team replies within minutes';
+
+  @override
+  String get chatOpen => 'Chat with us';
+
+  @override
+  String get chatHelp => 'Need help?';
+
+  @override
+  String get chatHelpOrder => 'Question about this order? Chat with us';
+
+  @override
+  String get chatWelcome =>
+      'Hi there! 👋 Ask us anything about your orders or our products and the Rocket team will get back to you shortly.';
+
+  @override
+  String get chatHours => 'We reply every day from 9 am to 11 pm.';
+
+  @override
+  String get chatPlaceholder => 'Write a message…';
+
+  @override
+  String get chatSend => 'Send';
+
+  @override
+  String get chatPhoto => 'Send a photo';
+
+  @override
+  String get chatRemovePhoto => 'Remove photo';
+
+  @override
+  String chatAboutOrder(String number) {
+    return 'About order $number';
+  }
+
+  @override
+  String get chatRemoveOrder => 'Remove order';
+
+  @override
+  String get chatSupport => 'Rocket team';
+
+  @override
+  String get chatYou => 'You';
+
+  @override
+  String get chatSending => 'Sending…';
+
+  @override
+  String get chatSent => 'Sent';
+
+  @override
+  String get chatSeen => 'Seen';
+
+  @override
+  String get chatFailed => 'Not sent. Tap to try again';
+
+  @override
+  String get chatOlder => 'Older messages';
+
+  @override
+  String get chatClosed => 'This conversation has ended. Send a message if you need anything else.';
+
+  @override
+  String get chatNewMessages => 'New messages';
+
+  @override
+  String get chatToday => 'Today';
+
+  @override
+  String get chatYesterday => 'Yesterday';
+
+  @override
+  String chatUnread(String number) {
+    return '$number new message(s)';
+  }
+
+  @override
+  String get chatPhotoMessage => '📷 Photo';
+
+  @override
+  String get chatPhotoGallery => 'Choose from photos';
+
+  @override
+  String get chatPhotoCamera => 'Take a photo';
+
+  @override
+  String get chatPhotoFailed => 'Couldn\'t open that photo.';
+
+  @override
+  String get chatViewPhoto => 'Photo';
 }

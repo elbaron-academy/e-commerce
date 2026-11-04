@@ -6,6 +6,7 @@ import '../core/l10n/l10n.dart';
 import '../features/auth/presentation/session_cubit.dart';
 import '../features/cart/presentation/cart_cubit.dart';
 import '../features/settings/locale_cubit.dart';
+import '../features/support/presentation/unread_cubit.dart';
 import 'di.dart';
 import 'router.dart';
 import 'theme.dart';
@@ -21,9 +22,19 @@ class RocketApp extends StatefulWidget {
 
 class _RocketAppState extends State<RocketApp> {
   late final GoRouter _router = createRouter(sl<SessionCubit>());
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    final unread = sl<SupportUnreadCubit>()..start();
+    // Check for support replies only while the app is on screen.
+    _lifecycle = AppLifecycleListener(onResume: unread.resume, onHide: unread.pause);
+  }
 
   @override
   void dispose() {
+    _lifecycle.dispose();
     _router.dispose();
     super.dispose();
   }
@@ -35,6 +46,7 @@ class _RocketAppState extends State<RocketApp> {
         BlocProvider.value(value: sl<LocaleCubit>()),
         BlocProvider.value(value: sl<SessionCubit>()),
         BlocProvider.value(value: sl<CartCubit>()),
+        BlocProvider.value(value: sl<SupportUnreadCubit>()),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) => MaterialApp.router(

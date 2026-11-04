@@ -20,6 +20,9 @@ import '../features/checkout/domain/delivery.dart';
 import '../features/orders/data/orders_repository_impl.dart';
 import '../features/orders/domain/order.dart';
 import '../features/settings/locale_cubit.dart';
+import '../features/support/data/support_repository_impl.dart';
+import '../features/support/domain/chat.dart';
+import '../features/support/presentation/unread_cubit.dart';
 import 'config.dart';
 
 /// Service locator (GetIt). Repositories are singletons; screen cubits are created by the screens.
@@ -50,6 +53,8 @@ Future<void> setupDependencies(AppConfig config) async {
     ..registerLazySingleton<AddressRepository>(() => AddressRepositoryImpl(sl()))
     ..registerLazySingleton<DeliveryRepository>(() => DeliveryRepositoryImpl(sl()))
     ..registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(sl()))
+    ..registerLazySingleton<SupportRepository>(() => SupportRepositoryImpl(sl()))
     ..registerSingleton<SessionCubit>(SessionCubit(sl()))
-    ..registerSingleton<CartCubit>(CartCubit(sl()));
+    ..registerSingleton<CartCubit>(CartCubit(sl()))
+    ..registerSingleton<SupportUnreadCubit>(SupportUnreadCubit(sl(), sl()));
 }

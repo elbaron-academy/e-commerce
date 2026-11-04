@@ -356,5 +356,49 @@
         "type": "String"
       }
     }
-  }
+  },
+  "chatTitle": "كلّمنا",
+  "chatSubtitle": "فريق روكت بيرد عليك في دقايق",
+  "chatOpen": "كلّمنا",
+  "chatHelp": "محتاج مساعدة؟",
+  "chatHelpOrder": "عندك سؤال عن الطلب ده؟ كلّمنا",
+  "chatWelcome": "أهلاً بيك! 👋 ابعتلنا سؤالك عن أي طلب أو منتج، وفريق روكت هيرد عليك في أسرع وقت.",
+  "chatHours": "بنرد من 9 الصبح لـ 11 بالليل كل يوم.",
+  "chatPlaceholder": "اكتب رسالتك…",
+  "chatSend": "ابعت",
+  "chatPhoto": "ابعت صورة",
+  "chatRemovePhoto": "شيل الصورة",
+  "chatAboutOrder": "بخصوص طلب {number}",
+  "@chatAboutOrder": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "chatRemoveOrder": "شيل الطلب",
+  "chatSupport": "فريق روكت",
+  "chatYou": "إنت",
+  "chatSending": "بيتبعت…",
+  "chatSent": "اتبعتت",
+  "chatSeen": "اتشافت",
+  "chatFailed": "متبعتتش. دوس عشان تحاول تاني",
+  "chatOlder": "رسائل أقدم",
+  "chatClosed": "المحادثة دي خلصت. ابعت رسالة لو محتاج حاجة تانية.",
+  "chatNewMessages": "رسائل جديدة",
+  "chatToday": "النهارده",
+  "chatYesterday": "امبارح",
+  "chatUnread": "{number} رسالة جديدة",
+  "@chatUnread": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "chatPhotoMessage": "📷 صورة",
+  "chatPhotoGallery": "من الصور",
+  "chatPhotoCamera": "صوّر دلوقتي",
+  "chatPhotoFailed": "مقدرناش نفتح الصورة.",
+  "chatViewPhoto": "الصورة"
 }

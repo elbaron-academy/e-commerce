@@ -12,6 +12,7 @@ import '../../../core/widgets/load_state.dart';
 import '../../auth/domain/auth.dart';
 import '../../auth/presentation/session_cubit.dart';
 import '../../settings/locale_cubit.dart';
+import '../../support/presentation/chat_entry.dart';
 import '../domain/address.dart';
 import 'address_form_sheet.dart';
 
@@ -113,6 +114,8 @@ class _AccountView extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        const ChatTile(),
         const SizedBox(height: 12),
         _ProfileCard(user: user),
         const SizedBox(height: 12),

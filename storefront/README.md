@@ -57,9 +57,10 @@ node .output/server/index.mjs   # http://localhost:3000
 | Checkout | `/checkout` | Delivery or pickup, addresses with GPS, delivery slots + express, cash/card/wallet |
 | Login | `/login` | Phone + OTP, accepts Arabic digits, WebOTP autofill on Android |
 | Account | `/account` | Profile, addresses, language, install app, sign out |
-| Orders | `/orders`, `/orders/:id` | History, live tracking timeline, "Order again" |
+| Orders | `/orders`, `/orders/:id` | History, live tracking timeline, "Order again", "Question about this order? Chat with us" |
+| Chat | `/chat`, `/chat?order=:id` | Chat with the support team: photos, read ticks (✓ sent, ✓✓ seen), unread badge in the header |
 
-Pages that depend on the user or the cart (`/cart`, `/checkout`, `/login`, `/account`, `/orders`, `/payment`) render in the browser only. Catalog pages are server-rendered for SEO.
+Pages that depend on the user or the cart (`/cart`, `/checkout`, `/login`, `/account`, `/orders`, `/payment`, `/chat`) render in the browser only. Catalog pages are server-rendered for SEO.
 
 ## PWA behaviour
 

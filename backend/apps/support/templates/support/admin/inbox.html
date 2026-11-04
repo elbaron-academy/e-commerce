@@ -1,0 +1,397 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  #content { padding-bottom: 0; }
+  .inbox { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 0; height: calc(100vh - 170px); min-height: 480px;
+    border: 1px solid var(--hairline-color); border-radius: 8px; overflow: hidden; background: var(--body-bg); }
+  .inbox-side { display: flex; flex-direction: column; border-inline-end: 1px solid var(--hairline-color); min-height: 0; }
+  .inbox-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px; border-bottom: 1px solid var(--hairline-color); }
+  .inbox-tabs button { border: 1px solid var(--hairline-color); background: var(--body-bg); color: var(--body-fg); border-radius: 999px;
+    padding: 4px 10px; cursor: pointer; font-size: 12px; }
+  .inbox-tabs button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-fg, #fff); }
+  .inbox-tabs .count { font-weight: 700; margin-inline-start: 4px; }
+  .inbox-search { padding: 8px 10px; border-bottom: 1px solid var(--hairline-color); }
+  .inbox-search input { width: 100%; box-sizing: border-box; }
+  .inbox-list { overflow-y: auto; flex: 1; margin: 0; padding: 0; list-style: none; }
+  .inbox-list li { margin: 0; padding: 0; list-style: none; }
+  .inbox-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: start; border: 0;
+    border-bottom: 1px solid var(--hairline-color); background: none; color: var(--body-fg); padding: 10px 12px; cursor: pointer; font: inherit; }
+  .inbox-item:hover { background: var(--darkened-bg); }
+  .inbox-item[aria-current="true"] { background: var(--selected-bg, var(--darkened-bg)); }
+  .inbox-item .who { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .inbox-item .when { color: var(--body-quiet-color); font-size: 11px; }
+  .inbox-item .preview { color: var(--body-quiet-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+  .badge { background: #0e7c5a; color: #fff; border-radius: 999px; min-width: 18px; height: 18px; padding: 0 5px; font-size: 11px;
+    font-weight: 700; display: inline-grid; place-items: center; box-sizing: border-box; }
+  .pill { border-radius: 999px; padding: 1px 8px; font-size: 11px; background: var(--darkened-bg); color: var(--body-quiet-color); }
+  .inbox-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .inbox-empty { margin: auto; color: var(--body-quiet-color); padding: 24px; text-align: center; }
+  .thread-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-bottom: 1px solid var(--hairline-color); }
+  .thread-head h2 { margin: 0; font-size: 16px; }
+  .thread-head .meta { color: var(--body-quiet-color); font-size: 12px; }
+  .thread-head .actions { margin-inline-start: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+  .thread-orders { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 14px; border-bottom: 1px solid var(--hairline-color); font-size: 12px; align-items: center; }
+  .thread-orders a { border: 1px solid var(--hairline-color); border-radius: 6px; padding: 2px 8px; }
+  .thread { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 6px; background: var(--darkened-bg); }
+  .day { align-self: center; font-size: 11px; color: var(--body-quiet-color); margin: 8px 0 2px; }
+  .event { align-self: center; font-size: 12px; color: var(--body-quiet-color); background: var(--body-bg); border-radius: 999px; padding: 3px 12px; margin: 6px 0; }
+  .msg { max-width: min(70%, 520px); padding: 8px 10px; border-radius: 12px; background: var(--body-bg); color: var(--body-fg);
+    align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,.06); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.staff { align-self: flex-end; background: #dcf3e8; color: #10291f; }
+  .msg .by { font-size: 11px; font-weight: 700; color: #0e7c5a; margin-bottom: 2px; }
+  .msg .foot { font-size: 10px; opacity: .65; margin-top: 3px; text-align: end; }
+  .msg img { display: block; max-width: 100%; height: auto; max-height: 320px; border-radius: 8px; margin-bottom: 4px; background: rgba(0,0,0,.05); }
+  .msg .order-ref { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 1px 6px; margin-bottom: 4px;
+    background: rgba(14,124,90,.12); color: #0e7c5a; }
+  .older { align-self: center; }
+  .composer { border-top: 1px solid var(--hairline-color); padding: 10px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: end; }
+  .composer textarea { width: 100%; box-sizing: border-box; resize: none; min-height: 40px; max-height: 160px; font: inherit; }
+  .composer .preview-img { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; }
+  .composer .preview-img img { height: 56px; border-radius: 6px; }
+  .note { padding: 10px 14px; border-top: 1px solid var(--hairline-color); color: var(--body-quiet-color); font-size: 12px; }
+  .error { color: var(--error-fg, #ba2121); font-size: 12px; padding: 0 14px 8px; }
+  .icon-btn { cursor: pointer; }
+  @media (max-width: 767px) {
+    .inbox { grid-template-columns: 1fr; height: auto; }
+    .inbox-side { max-height: 40vh; border-inline-end: 0; border-bottom: 1px solid var(--hairline-color); }
+    .inbox-main { min-height: 70vh; }
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{{ site_header|default:"Home" }}</a>
+  &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+{{ inbox_config|json_script:"inbox-config" }}
+<div class="inbox" id="inbox">
+  <aside class="inbox-side">
+    <div class="inbox-tabs" id="ibx-tabs" role="toolbar"></div>
+    <div class="inbox-search"><input type="search" id="ibx-search" autocomplete="off"></div>
+    <ul class="inbox-list" id="ibx-list"></ul>
+  </aside>
+  <section class="inbox-main" id="ibx-main"></section>
+</div>
+<p style="margin-top:8px"><a id="ibx-list-link"></a></p>
+
+<script>
+(() => {
+  'use strict'
+  const cfg = JSON.parse(document.getElementById('inbox-config').textContent)
+  const L = cfg.labels
+  const locale = cfg.lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB'
+  const timeFmt = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' })
+  const dayFmt = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' })
+  const shortFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' })
+  const FILTERS = [
+    ['needs_reply', { needs_reply: 'true' }],
+    ['open', { status: 'open' }],
+    ['mine', { status: 'open', assigned: 'me' }],
+    ['closed', { status: 'closed' }],
+    ['all', {}],
+  ]
+
+  const $ = (id) => document.getElementById(id)
+  const el = (tag, props = {}, ...children) => {
+    const node = Object.assign(document.createElement(tag), props)
+    for (const child of children.flat()) if (child != null) node.append(child)
+    return node
+  }
+
+  const state = { filter: 'open', search: '', list: [], summary: {}, current: null, messages: [], photo: null, sending: false }
+
+  async function api(path, { method = 'GET', body, form } = {}) {
+    const url = new URL(cfg.api + path, location.origin)
+    url.searchParams.set('lang', cfg.lang)
+    const headers = { Accept: 'application/json' }
+    if (method !== 'GET') headers['X-CSRFToken'] = cfg.csrf
+    if (body) headers['Content-Type'] = 'application/json'
+    const res = await fetch(url, { method, headers, credentials: 'same-origin', body: form || (body && JSON.stringify(body)) })
+    if (res.status === 204) return null
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw Object.assign(new Error(data.detail || L.error), { data, status: res.status })
+    return data
+  }
+
+  const who = (p) => (p && (p.name || p.phone)) || '—'
+  const isToday = (d) => new Date(d).toDateString() === new Date().toDateString()
+  const when = (d) => (d ? (isToday(d) ? timeFmt.format(new Date(d)) : shortFmt.format(new Date(d))) : '')
+  const preview = (m) => (!m ? '' : m.kind === 'event' ? L.closed_event : (m.sender === 'staff' ? `${L.you}: ` : '') + (m.body || L.photo_msg))
+
+  // ---- Conversation list ----
+
+  function renderTabs() {
+    $('ibx-tabs').replaceChildren(
+      ...FILTERS.map(([key]) => {
+        const count = key === 'needs_reply' ? state.summary.needs_reply : key === 'open' ? state.summary.open : key === 'mine' ? state.summary.mine : null
+        return el('button', { type: 'button', ariaPressed: String(state.filter === key), onclick: () => { state.filter = key; loadList() } },
+          L[key], count ? el('span', { className: 'count', textContent: count }) : null)
+      }),
+    )
+  }
+
+  function renderList() {
+    const list = $('ibx-list')
+    if (!state.list.length) {
+      list.replaceChildren(el('li', {}, el('p', { className: 'inbox-empty', textContent: L.empty_list })))
+      return
+    }
+    list.replaceChildren(
+      ...state.list.map((c) =>
+        el('li', {},
+          el('button', { type: 'button', className: 'inbox-item', ariaCurrent: String(state.current?.id === c.id), onclick: () => (location.hash = String(c.id)) },
+            el('span', { className: 'who', textContent: who(c.customer) }),
+            el('span', { className: 'when', textContent: when(c.last_message_at) }),
+            el('span', { className: 'preview', dir: 'auto', textContent: preview(c.last_message) }),
+            el('span', {}, c.unread ? el('span', { className: 'badge', textContent: c.unread }) : c.status === 'closed' ? el('span', { className: 'pill', textContent: L.closed }) : null),
+          ),
+        ),
+      ),
+    )
+  }
+
+  async function loadList() {
+    const params = new URLSearchParams(Object.fromEntries(FILTERS)[state.filter])
+    if (state.search) params.set('search', state.search)
+    params.set('page_size', '100')
+    try {
+      const [page, summary] = await Promise.all([api(`?${params}`), api('summary/')])
+      state.list = page.results
+      state.summary = summary
+      document.title = `${summary.needs_reply ? `(${summary.needs_reply}) ` : ''}${L.title}`
+    } catch (e) { /* keep the last list on a network blip */ }
+    renderTabs()
+    renderList()
+  }
+
+  // ---- Thread ----
+
+  function messageNode(m, c) {
+    if (m.kind === 'event') return el('div', { className: 'event', textContent: `${L.closed_event} · ${timeFmt.format(new Date(m.created_at))}` })
+    const staff = m.sender === 'staff'
+    const seen = staff && m.id <= c.customer_last_read
+    const size = m.image?.width ? { width: m.image.width, height: m.image.height } : {}
+    return el('div', { className: `msg ${staff ? 'staff' : ''}` },
+      staff ? el('div', { className: 'by', textContent: m.sender_name || L.staff }) : null,
+      m.order ? el('a', { className: 'order-ref', href: cfg.order_url.replace('{id}', m.order.id), target: '_blank', textContent: `${L.order} ${m.order.number}` }) : null,
+      m.image ? el('a', { href: m.image.url, target: '_blank', rel: 'noopener' }, el('img', { src: m.image.url, alt: L.photo, loading: 'lazy', ...size })) : null,
+      m.body ? el('div', { dir: 'auto', textContent: m.body }) : null,
+      el('div', { className: 'foot', textContent: timeFmt.format(new Date(m.created_at)) + (seen ? ` · ✓✓ ${L.seen}` : '') }),
+    )
+  }
+
+  function renderMessages() {
+    const box = $('ibx-thread')
+    if (!box || !state.current) return
+    const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80
+    const nodes = []
+    if (state.current.has_older) nodes.push(el('button', { type: 'button', className: 'button older', textContent: L.older, onclick: loadOlder }))
+    let day = ''
+    for (const m of state.messages) {
+      const d = new Date(m.created_at).toDateString()
+      if (d !== day) { day = d; nodes.push(el('div', { className: 'day', textContent: dayFmt.format(new Date(m.created_at)) })) }
+      nodes.push(messageNode(m, state.current))
+    }
+    box.replaceChildren(...nodes)
+    if (nearBottom || state.stickToBottom) { box.scrollTop = box.scrollHeight; state.stickToBottom = false }
+  }
+
+  function renderThread() {
+    const c = state.current
+    const main = $('ibx-main')
+    if (!c) { main.replaceChildren(el('p', { className: 'inbox-empty', textContent: L.pick })); return }
+    const actions = el('div', { className: 'actions' })
+    if (cfg.can_change) {
+      if (c.status === 'open') {
+        const mine = c.assigned_to?.id === cfg.me
+        actions.append(el('button', { type: 'button', className: 'button', textContent: mine ? L.unassign : L.assign_me, onclick: () => act('assign/', { user: mine ? null : cfg.me }) }))
+        actions.append(el('button', { type: 'button', className: 'button', textContent: L.close, onclick: () => confirm(L.close_confirm) && act('close/') }))
+      } else {
+        actions.append(el('button', { type: 'button', className: 'button', textContent: L.reopen, onclick: () => act('reopen/') }))
+      }
+    }
+    const head = el('div', { className: 'thread-head' },
+      el('div', {},
+        el('h2', { textContent: who(c.customer) }),
+        el('div', { className: 'meta', dir: 'ltr', textContent: c.customer.phone }),
+      ),
+      el('span', { className: 'meta', textContent: `${L.assigned_to}: ${c.assigned_to ? who(c.assigned_to) : L.nobody}` }),
+      c.status === 'closed' ? el('span', { className: 'pill', textContent: L.closed }) : null,
+      actions,
+    )
+    const orders = el('div', { className: 'thread-orders' }, el('strong', { textContent: `${L.orders}:` }),
+      ...(c.orders.length ? c.orders.map((o) => el('a', { href: cfg.order_url.replace('{id}', o.id), target: '_blank', textContent: `${o.number || o.id} · ${o.status}` })) : [el('span', { textContent: L.no_orders })]))
+    const thread = el('div', { className: 'thread', id: 'ibx-thread' })
+    const parts = [head, orders, thread]
+    if (c.status !== 'open') parts.push(el('div', { className: 'note', textContent: L.closed_note }))
+    else if (!cfg.can_reply) parts.push(el('div', { className: 'note', textContent: L.no_reply_perm }))
+    else parts.push(composer())
+    main.replaceChildren(...parts)
+    state.stickToBottom = true
+    renderMessages()
+  }
+
+  function composer() {
+    const text = el('textarea', { id: 'ibx-reply', rows: 1, placeholder: L.placeholder, dir: 'auto', maxLength: 2000 })
+    const file = el('input', { type: 'file', accept: 'image/*', hidden: true, onchange: () => setPhoto(file.files[0]) })
+    const attach = el('button', { type: 'button', className: 'button icon-btn', title: L.photo, ariaLabel: L.photo, textContent: '📷', onclick: () => file.click() })
+    const send = el('button', { type: 'submit', className: 'button default', textContent: L.send, id: 'ibx-send' })
+    const previewBox = el('div', { className: 'preview-img', id: 'ibx-photo-preview', hidden: true })
+    const form = el('form', { className: 'composer', onsubmit: (e) => { e.preventDefault(); sendReply() } }, previewBox, attach, text, send, file)
+    text.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendReply() } })
+    text.addEventListener('input', () => { text.style.height = 'auto'; text.style.height = `${Math.min(text.scrollHeight, 160)}px` })
+    text.addEventListener('paste', (e) => { const f = [...(e.clipboardData?.files || [])].find((x) => x.type.startsWith('image/')); if (f) { e.preventDefault(); setPhoto(f) } })
+    const wrap = el('div', {}, form, el('div', { className: 'error', id: 'ibx-reply-error' }))
+    setTimeout(() => text.focus(), 0)
+    return wrap
+  }
+
+  function setPhoto(f) {
+    state.photo = f || null
+    const box = $('ibx-photo-preview')
+    if (!box) return
+    box.hidden = !f
+    box.replaceChildren(...(f ? [el('img', { src: URL.createObjectURL(f), alt: '' }), el('button', { type: 'button', className: 'button', textContent: L.remove_photo, onclick: () => setPhoto(null) })] : []))
+  }
+
+  async function sendReply() {
+    const text = $('ibx-reply')
+    const body = text.value.trim()
+    if (state.sending || (!body && !state.photo)) return
+    state.sending = true
+    $('ibx-send').disabled = true
+    $('ibx-reply-error').textContent = ''
+    try {
+      let message
+      if (state.photo) {
+        const form = new FormData()
+        form.append('body', body)
+        form.append('image', state.photo)
+        message = await api(`${state.current.id}/messages/`, { method: 'POST', form })
+      } else {
+        message = await api(`${state.current.id}/messages/`, { method: 'POST', body: { body } })
+      }
+      text.value = ''
+      text.style.height = 'auto'
+      setPhoto(null)
+      merge([message])
+      state.stickToBottom = true
+      renderMessages()
+      loadList()
+    } catch (e) {
+      $('ibx-reply-error').textContent = e.message
+    } finally {
+      state.sending = false
+      if ($('ibx-send')) $('ibx-send').disabled = false
+    }
+  }
+
+  async function act(path, body) {
+    try {
+      await api(`${state.current.id}/${path}`, { method: 'POST', body: body || {} })
+      await openConversation(state.current.id)
+      loadList()
+    } catch (e) { alert(e.message) }
+  }
+
+  function merge(messages) {
+    const known = new Set(state.messages.map((m) => m.id))
+    const fresh = messages.filter((m) => !known.has(m.id))
+    if (fresh.length) state.messages = [...state.messages, ...fresh].sort((a, b) => a.id - b.id)
+    return fresh
+  }
+
+  const lastId = () => (state.messages.length ? state.messages[state.messages.length - 1].id : 0)
+
+  async function markRead() {
+    const c = state.current
+    if (!c || document.visibilityState !== 'visible') return
+    const lastCustomer = [...state.messages].reverse().find((m) => m.sender === 'customer')
+    if (lastCustomer && lastCustomer.id > c.staff_last_read) {
+      c.staff_last_read = lastCustomer.id
+      await api(`${c.id}/read/`, { method: 'POST', body: { message_id: lastCustomer.id } }).catch(() => {})
+      loadList()
+    }
+  }
+
+  async function openConversation(id) {
+    try {
+      const data = await api(`${id}/`)
+      const switching = state.current?.id !== data.id
+      state.current = data
+      state.messages = data.messages
+      if (switching) setPhoto(null)
+      renderThread()
+      renderList()
+      markRead()
+    } catch (e) {
+      state.current = null
+      renderThread()
+    }
+  }
+
+  async function loadOlder() {
+    const first = state.messages[0]
+    if (!first) return
+    const box = $('ibx-thread')
+    const height = box.scrollHeight
+    const data = await api(`${state.current.id}/?before=${first.id}`)
+    state.current.has_older = data.has_older
+    state.messages = [...data.messages, ...state.messages]
+    renderMessages()
+    box.scrollTop = box.scrollHeight - height
+  }
+
+  async function poll() {
+    const c = state.current
+    if (!c) return
+    try {
+      const data = await api(`${c.id}/?after=${lastId()}`)
+      if (state.current?.id !== c.id) return
+      const statusChanged = data.status !== c.status || data.assigned_to?.id !== c.assigned_to?.id
+      const readChanged = data.customer_last_read !== c.customer_last_read
+      Object.assign(c, { ...data, messages: undefined, has_older: c.has_older })
+      const fresh = merge(data.messages)
+      if (statusChanged) renderThread()
+      else if (fresh.length || readChanged) renderMessages()
+      if (fresh.length) markRead()
+    } catch (e) { /* try again next tick */ }
+  }
+
+  // ---- Wiring ----
+
+  $('ibx-search').placeholder = L.search
+  let searchTimer
+  $('ibx-search').addEventListener('input', (e) => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim(); loadList() }, 300) })
+  $('ibx-list-link').href = cfg.list_url
+  $('ibx-list-link').textContent = L.admin_list
+
+  function route() {
+    const id = Number(location.hash.slice(1))
+    if (id) openConversation(id)
+    else { state.current = null; renderThread(); renderList() }
+  }
+  window.addEventListener('hashchange', route)
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { poll(); loadList(); markRead() } })
+
+  // Poll fast while the page is visible, slowly in a background tab.
+  let tick = 0
+  setInterval(() => {
+    tick += 1
+    const visible = document.visibilityState === 'visible'
+    if (visible || tick % 5 === 0) poll()
+    if ((visible && tick % 2 === 0) || tick % 10 === 0) loadList()
+  }, 3000)
+
+  loadList()
+  route()
+})()
+</script>
+{% endblock %}

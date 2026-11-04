@@ -56,6 +56,7 @@ class AuthInterceptor extends QueuedInterceptor {
   Future<void> _retry(RequestOptions options, ErrorInterceptorHandler handler) async {
     options.extra['retried'] = true;
     options.headers['Authorization'] = 'Bearer ${tokens.access}';
+    if (options.data case final FormData form) options.data = form.clone();
     try {
       handler.resolve(await dio.fetch<dynamic>(options));
     } on DioException catch (e) {

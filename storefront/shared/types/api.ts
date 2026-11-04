@@ -275,3 +275,35 @@ export interface OrderCreateResponse {
   /** Present for card/wallet: send the customer here to pay. */
   payment_url: string | null
 }
+
+// ---- Support chat ----
+
+export interface ChatMessage {
+  id: number
+  conversation: number
+  kind: 'text' | 'event'
+  /** For kind "event": what happened. */
+  event: '' | 'closed'
+  sender: 'customer' | 'staff'
+  sender_name: string
+  body: string
+  image: { url: string; width: number | null; height: number | null } | null
+  order: { id: number; number: string } | null
+  created_at: string
+}
+
+export interface ChatConversationRef {
+  id: number
+  status: 'open' | 'closed'
+  /** Last message id the support team has seen (for ✓✓). */
+  staff_last_read: number
+  customer_last_read: number
+}
+
+/** GET /support/chat/ — the whole chat, new messages (`after`) or older ones (`before`). */
+export interface ChatState {
+  conversation: ChatConversationRef | null
+  messages: ChatMessage[]
+  has_older: boolean
+  unread: number
+}

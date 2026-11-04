@@ -17,4 +17,7 @@ OTP_FIXED_CODE = "1234"
 PAYMENT_PROVIDER = "dummy"
 PAYMENT_WEBHOOK_SECRET = "test-webhook-secret"
 STAFF_ALERT_EMAILS = ["ops@rocket.test"]
-REST_FRAMEWORK = {**REST_FRAMEWORK, "DEFAULT_THROTTLE_RATES": {"otp": "1000/hour", "login": "1000/minute"}}
+REST_FRAMEWORK = {
+    **REST_FRAMEWORK,
+    "DEFAULT_THROTTLE_RATES": {"otp": "1000/hour", "login": "1000/minute", "chat": "1000/minute"},
+}

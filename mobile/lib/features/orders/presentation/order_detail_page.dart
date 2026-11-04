@@ -223,6 +223,12 @@ class _OrderView extends StatelessWidget {
           icon: const Icon(Icons.replay),
           label: Text(l10n.ordersReorder),
         ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          onPressed: () => context.push('/chat?order=${order.id}'),
+          icon: const Icon(Icons.chat_bubble_outline),
+          label: Text(l10n.chatHelpOrder),
+        ),
         if (!order.isFinished)
           Padding(
             padding: const EdgeInsets.only(top: 12),

@@ -34,6 +34,7 @@ Admin: `python manage.py ensure_admin --email you@example.com --password '…'` 
 | `orders` | Cart pricing, checkout in one transaction, stock reservation, status machine with history, timeline, dashboard | BE-401/403, BE-501 → BE-503, BE-601 → BE-606 |
 | `payments` | Gateway interface, test gateway, signed webhooks handled once, late payments flagged for refund | BE-504 |
 | `notifications` | SMS / email / push with Arabic and English templates and a send log | BE-506 |
+| `support` | Support chat: customer ↔ staff messages with photos and order references, read receipts, staff inbox in the admin, email to staff on a new chat, SMS when a reply stays unread | (not in the plan) |
 
 ## Design notes
 
@@ -43,6 +44,7 @@ Admin: `python manage.py ensure_admin --email you@example.com --password '…'` 
 - **Search:** runs on the main database with Arabic normalization (أ/ا, ة/ه, ى/ي), the definite article and typo tolerance. Fine for a few thousand products. Meilisearch (BE-302) can replace it behind the same function.
 - **Status changes:** only allowed moves (`Order.TRANSITIONS`). Each change is recorded, and the customer gets an SMS for the key steps.
 - **Translations:** models have `_ar` and `_en` columns. Responses return the active language.
+- **Support chat:** a customer has at most one open conversation (database constraint); staff close it and the next message opens a new one, while the customer still sees one continuous chat. Clients poll `?after=<last id>`, which is cheap and works with one gunicorn worker and SQLite. WebSockets (Django Channels) can replace polling once Redis is added. Staff reply at `/admin/support/conversation/inbox/`, a page in the Django admin built on the staff API. Photos get random names under `media/support/` and are re-encoded without EXIF. A reply the customer hasn't read after `SUPPORT_REPLY_REMINDER_MINUTES` (10) sends one SMS (`remind_unread_replies`, run every minute).
 
 ## API
 
@@ -50,7 +52,7 @@ Interactive docs at `/api/docs/` (Swagger) and `/api/redoc/`. The storefront con
 
 Staff API under `/api/v1/admin/` (phone + password login at `admin/auth/login/`). Each endpoint checks Django model permissions, and roles are Django groups (`make roles` creates Admin, Catalog manager, Order manager and Support):
 
-`dashboard/`, `orders/` (+ `{id}/transition/`), `products/` (+ `{id}/images/`), `variants/` (stock, `?low_stock=true`), `categories/`, `brands/`, `vendors/`, `banners/`, `home-sections/`, `coupons/` (+ `{id}/redemptions/`), `zones/`, `delivery-windows/`, `settings/`, `customers/`, `staff/`, `roles/`, `permissions/`, `notifications/`.
+`dashboard/`, `support/conversations/` (+ `{id}/messages/`, `read/`, `assign/`, `close/`, `reopen/`, `summary/`), `orders/` (+ `{id}/transition/`), `products/` (+ `{id}/images/`), `variants/` (stock, `?low_stock=true`), `categories/`, `brands/`, `vendors/`, `banners/`, `home-sections/`, `coupons/` (+ `{id}/redemptions/`), `zones/`, `delivery-windows/`, `settings/`, `customers/`, `staff/`, `roles/`, `permissions/`, `notifications/`.
 
 ## Not built yet
 

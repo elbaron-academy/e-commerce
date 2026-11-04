@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../core/l10n/l10n.dart';
 import '../core/widgets/offline_banner.dart';
 import '../features/cart/presentation/cart_cubit.dart';
+import '../features/support/presentation/unread_cubit.dart';
 import 'theme.dart';
 
 /// Bottom navigation: Home, Categories, Cart, Orders, Account.
@@ -17,6 +18,7 @@ class MainShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final count = context.select((CartCubit c) => c.state.count);
+    final unread = context.watch<SupportUnreadCubit>().state;
     return Scaffold(
       body: Column(
         children: [
@@ -63,8 +65,17 @@ class MainShell extends StatelessWidget {
               label: l10n.navOrders,
             ),
             NavigationDestination(
-              icon: const Icon(Icons.person_outline),
-              selectedIcon: const Icon(Icons.person),
+              // A dot when the support team has replied (the chat lives under Account).
+              icon: Badge(
+                isLabelVisible: unread > 0,
+                backgroundColor: AppColors.accent500,
+                child: const Icon(Icons.person_outline),
+              ),
+              selectedIcon: Badge(
+                isLabelVisible: unread > 0,
+                backgroundColor: AppColors.accent500,
+                child: const Icon(Icons.person),
+              ),
               label: l10n.navAccount,
             ),
           ],

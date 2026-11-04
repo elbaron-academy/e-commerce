@@ -261,5 +261,34 @@
   "error": {
     "notFound": "This page doesn't exist",
     "generic": "Something unexpected happened"
+  },
+  "chat": {
+    "title": "Chat with us",
+    "subtitle": "The Rocket team replies within minutes",
+    "open": "Chat with us",
+    "help": "Need help?",
+    "helpOrder": "Question about this order? Chat with us",
+    "welcome": "Hi there! 👋 Ask us anything about your orders or our products and the Rocket team will get back to you shortly.",
+    "hours": "We reply every day from 9 am to 11 pm.",
+    "placeholder": "Write a message…",
+    "send": "Send",
+    "photo": "Send a photo",
+    "removePhoto": "Remove photo",
+    "aboutOrder": "About order {n}",
+    "removeOrder": "Remove order",
+    "support": "Rocket team",
+    "you": "You",
+    "sending": "Sending…",
+    "sent": "Sent",
+    "seen": "Seen",
+    "failed": "Not sent. Tap to try again",
+    "older": "Older messages",
+    "closed": "This conversation has ended. Send a message if you need anything else.",
+    "newMessages": "New messages",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "unread": "{n} new message(s)",
+    "photoMessage": "📷 Photo",
+    "loginHint": "Sign in to chat with our support team and see their replies."
   }
 }

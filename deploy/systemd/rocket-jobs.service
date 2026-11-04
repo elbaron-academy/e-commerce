@@ -1,5 +1,5 @@
 [Unit]
-Description=Rocket Market: release expired stock reservations
+Description=Rocket Market: minute jobs (stock reservations, chat reply reminders)
 ConditionPathExists=/opt/rocket/backend/manage.py
 
 [Service]
@@ -9,3 +9,4 @@ WorkingDirectory=/opt/rocket/backend
 Environment=DJANGO_SETTINGS_MODULE=config.settings.prod
 Environment=DJANGO_ENV_FILE=/opt/rocket/.env
 ExecStart=/opt/rocket/venv/bin/python manage.py release_expired_reservations
+ExecStart=/opt/rocket/venv/bin/python manage.py remind_unread_replies

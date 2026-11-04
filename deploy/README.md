@@ -57,7 +57,7 @@ The setup script is safe to run again. It:
 - installs nginx, Python 3, Node.js 22 and certbot
 - creates `/opt/rocket` and `/var/www/html/rocket` (owned by `hossam`)
 - writes `/opt/rocket/.env` with a freshly generated Django `SECRET_KEY` and webhook secret (only if the file doesn't exist yet)
-- installs the systemd services (`rocket-api`, `rocket-web`) and timers (`rocket-jobs` every minute, `rocket-backup` nightly)
+- installs the systemd services (`rocket-api`, `rocket-web`) and timers (`rocket-jobs` every minute for stock holds and chat reply reminders, `rocket-backup` nightly)
 - lets `hossam` restart those services without a password (used by CI/CD)
 - gets HTTPS certificates. If DNS isn't ready yet, the sites run over HTTP. Run the script again once DNS works.
 
@@ -96,6 +96,7 @@ Every deploy ends with a **Server report** on the workflow run page: DNS, HTTPS,
 | Edit production settings | `ssh hossam@35.226.179.10 'nano /opt/rocket/.env'`, then `sudo systemctl restart rocket-api` |
 | API workers / threads | `GUNICORN_WORKERS` and `GUNICORN_THREADS` in `/opt/rocket/.env` (both 1), then restart `rocket-api` |
 | Backups | `/opt/rocket/backups/db-*.sqlite3.gz` (14 days) |
+| Support chat inbox | https://api.rocket.hossam-ameen.online/admin/support/conversation/inbox/ (staff with the Support, Order manager or Admin role) |
 
 ## Files on the VM
 
@@ -117,5 +118,5 @@ Every deploy ends with a **Server report** on the workflow run page: DNS, HTTPS,
 
 - Connect an SMS provider and **remove `OTP_FIXED_CODE=1234`** from `/opt/rocket/.env`. Until then, every login code is 1234.
 - Choose the payment gateway (BE-504) and set `PAYMENT_PROVIDER`. `dummy` sends customers to a test payment page.
-- Set `STAFF_ALERT_EMAILS` and the `EMAIL_*` settings for low-stock emails, and `SENTRY_DSN` for error tracking.
+- Set `STAFF_ALERT_EMAILS` and the `EMAIL_*` settings for low-stock and new-chat emails, and `SENTRY_DSN` for error tracking.
 - When traffic grows: move to PostgreSQL (`DATABASE_URL`) and add Redis (`REDIS_URL`, `CELERY_BROKER_URL`). No code changes needed.

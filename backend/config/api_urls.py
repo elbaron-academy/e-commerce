@@ -15,6 +15,8 @@ from apps.payments import views as payments
 from apps.promotions import admin_api as promotions_admin
 from apps.shipping import admin_api as shipping_admin
 from apps.shipping import views as shipping
+from apps.support import admin_api as support_admin
+from apps.support import views as support
 
 router = DefaultRouter()
 router.register("addresses", accounts.AddressViewSet, basename="address")
@@ -37,6 +39,9 @@ admin_router.register("coupons", promotions_admin.CouponAdminViewSet, basename="
 admin_router.register("zones", shipping_admin.ZoneAdminViewSet, basename="admin-zone")
 admin_router.register("delivery-windows", shipping_admin.DeliveryWindowAdminViewSet, basename="admin-delivery-window")
 admin_router.register("notifications", notifications_admin.NotificationLogAdminViewSet, basename="admin-notification")
+admin_router.register(
+    "support/conversations", support_admin.ConversationAdminViewSet, basename="admin-support-conversation"
+)
 
 admin_urls = [
     path("auth/login/", accounts.StaffLoginView.as_view(), name="admin-login"),
@@ -66,6 +71,11 @@ urlpatterns = [
     path("auth/token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
     path("me/", accounts.MeView.as_view(), name="me"),
     path("me/phone/", accounts.ChangePhoneView.as_view(), name="me-phone"),
+    # Support chat
+    path("support/chat/", support.ChatView.as_view(), name="support-chat"),
+    path("support/chat/messages/", support.ChatMessageView.as_view(), name="support-chat-messages"),
+    path("support/chat/read/", support.ChatReadView.as_view(), name="support-chat-read"),
+    path("support/chat/unread/", support.ChatUnreadView.as_view(), name="support-chat-unread"),
     # Payments
     path("payments/webhook/<slug:provider>/", payments.PaymentWebhookView.as_view(), name="payment-webhook"),
     path("payments/mock/confirm/", payments.MockPaymentConfirmView.as_view(), name="payment-mock-confirm"),

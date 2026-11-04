@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
 
 ROLES = {
-    "Admin": {"accounts", "catalog", "orders", "payments", "promotions", "shipping", "notifications"},
+    "Admin": {"accounts", "catalog", "orders", "payments", "promotions", "shipping", "notifications", "support"},
     "Catalog manager": {"catalog.*", "promotions.view_coupon"},
     "Order manager": {
         "orders.*",
@@ -11,6 +11,8 @@ ROLES = {
         "accounts.view_address",
         "catalog.view_product",
         "catalog.view_variant",
+        "support.view_conversation",
+        "support.add_message",
     },
     "Support": {
         "orders.view_order",
@@ -18,6 +20,10 @@ ROLES = {
         "accounts.view_user",
         "accounts.view_address",
         "accounts.change_user",
+        "support.view_conversation",
+        "support.change_conversation",
+        "support.view_message",
+        "support.add_message",
     },
 }
 

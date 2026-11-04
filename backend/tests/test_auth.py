@@ -166,7 +166,9 @@ def test_ensure_admin_and_email_login(api, client):
     assert res.status_code == 200 and res.json()["user"]["phone"] == admin.phone
     assert api.post("/api/v1/admin/auth/login/", {"login": "admin@gm.com", "password": "nope"}).status_code == 401
 
-    # Django admin login page with email
+    # Django admin login page with email. The input must fit an email, not just an 11-digit phone.
+    form = client.get("/admin/login/").content.decode()
+    assert 'name="username"' in form and 'maxlength="254"' in form
     page = client.post("/admin/login/?next=/admin/", {"username": "admin@gm.com", "password": "admin"})
     assert page.status_code == 302 and page.url == "/admin/"
 

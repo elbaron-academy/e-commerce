@@ -709,4 +709,98 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ordersPullToRefresh => 'اسحب لتحديث حالة الطلب';
+
+  @override
+  String get chatTitle => 'كلّمنا';
+
+  @override
+  String get chatSubtitle => 'فريق روكت بيرد عليك في دقايق';
+
+  @override
+  String get chatOpen => 'كلّمنا';
+
+  @override
+  String get chatHelp => 'محتاج مساعدة؟';
+
+  @override
+  String get chatHelpOrder => 'عندك سؤال عن الطلب ده؟ كلّمنا';
+
+  @override
+  String get chatWelcome => 'أهلاً بيك! 👋 ابعتلنا سؤالك عن أي طلب أو منتج، وفريق روكت هيرد عليك في أسرع وقت.';
+
+  @override
+  String get chatHours => 'بنرد من 9 الصبح لـ 11 بالليل كل يوم.';
+
+  @override
+  String get chatPlaceholder => 'اكتب رسالتك…';
+
+  @override
+  String get chatSend => 'ابعت';
+
+  @override
+  String get chatPhoto => 'ابعت صورة';
+
+  @override
+  String get chatRemovePhoto => 'شيل الصورة';
+
+  @override
+  String chatAboutOrder(String number) {
+    return 'بخصوص طلب $number';
+  }
+
+  @override
+  String get chatRemoveOrder => 'شيل الطلب';
+
+  @override
+  String get chatSupport => 'فريق روكت';
+
+  @override
+  String get chatYou => 'إنت';
+
+  @override
+  String get chatSending => 'بيتبعت…';
+
+  @override
+  String get chatSent => 'اتبعتت';
+
+  @override
+  String get chatSeen => 'اتشافت';
+
+  @override
+  String get chatFailed => 'متبعتتش. دوس عشان تحاول تاني';
+
+  @override
+  String get chatOlder => 'رسائل أقدم';
+
+  @override
+  String get chatClosed => 'المحادثة دي خلصت. ابعت رسالة لو محتاج حاجة تانية.';
+
+  @override
+  String get chatNewMessages => 'رسائل جديدة';
+
+  @override
+  String get chatToday => 'النهارده';
+
+  @override
+  String get chatYesterday => 'امبارح';
+
+  @override
+  String chatUnread(String number) {
+    return '$number رسالة جديدة';
+  }
+
+  @override
+  String get chatPhotoMessage => '📷 صورة';
+
+  @override
+  String get chatPhotoGallery => 'من الصور';
+
+  @override
+  String get chatPhotoCamera => 'صوّر دلوقتي';
+
+  @override
+  String get chatPhotoFailed => 'مقدرناش نفتح الصورة.';
+
+  @override
+  String get chatViewPhoto => 'الصورة';
 }

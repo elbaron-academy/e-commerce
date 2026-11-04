@@ -69,6 +69,16 @@ function logout() {
       </NuxtLinkLocale>
     </section>
 
+    <NuxtLinkLocale to="/chat" class="card p-4 flex items-center gap-3 hover:border-brand-300 transition">
+      <span class="grid place-items-center size-11 rounded-xl bg-brand-50 text-brand-700"><AppIcon name="chat" :size="22" /></span>
+      <span class="flex-1 min-w-0">
+        <span class="block font-extrabold text-sm">{{ t('chat.title') }}</span>
+        <span class="block text-xs text-muted">{{ t('chat.subtitle') }}</span>
+      </span>
+      <ChatBadge />
+      <AppIcon name="chevron-end" :size="18" class="text-muted" />
+    </NuxtLinkLocale>
+
     <section v-if="pwa?.showInstallPrompt && !pwa?.isPWAInstalled" class="card p-4 flex items-center gap-3 bg-brand-50 border-brand-100">
       <img src="/pwa-192x192.png" alt="" width="44" height="44" class="size-11 rounded-xl">
       <div class="flex-1 min-w-0">

@@ -28,6 +28,25 @@ TEMPLATES = {
             "body": {"ar": "طلبك {number} {status}.", "en": "Your order {number} {status}."},
         },
     },
+    "support_new": {
+        "email": {
+            "subject": {"ar": "محادثة دعم جديدة من {customer}", "en": "New support chat from {customer}"},
+            "body": {
+                "ar": "{customer} ({phone}) كتب:\n\n{message}\n\nرد من هنا: {url}",
+                "en": "{customer} ({phone}) wrote:\n\n{message}\n\nReply here: {url}",
+            },
+        },
+    },
+    "support_reply": {
+        "sms": {
+            "ar": "فريق روكت ماركت رد على رسالتك. اقرا الرد: {url}",
+            "en": "Rocket Market support replied to your message. Read it: {url}",
+        },
+        "push": {
+            "title": {"ar": "رد جديد من الدعم", "en": "New reply from support"},
+            "body": {"ar": "فريق روكت رد على رسالتك.", "en": "Rocket support replied to your message."},
+        },
+    },
     "low_stock": {
         "email": {
             "subject": {"ar": "تنبيه مخزون: {count} منتج", "en": "Low stock: {count} item(s)"},

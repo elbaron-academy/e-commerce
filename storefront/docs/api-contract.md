@@ -62,6 +62,19 @@ When the server-side cart from BE-401/402 is ready, the same `Quote` shape can c
 | GET | `/orders/` | | `Paginated<Order>` |
 | GET | `/orders/{id}/` | | `Order` with `timeline` |
 
+## Support chat 🔒
+
+The customer sees one continuous chat. The server groups it into conversations: staff close one when the issue is solved, and the customer's next message opens a new one. While the chat is open, the client polls `GET /support/chat/?after=<last id>` every 3 seconds (every 15 in a background tab), which returns only new messages.
+
+| Method | Path | Body | Returns |
+| --- | --- | --- | --- |
+| GET | `/support/chat/` | `?after=<id>` new messages, `?before=<id>` older ones, nothing for the latest 30 | `ChatState` (`conversation`, `messages` oldest first, `has_older`, `unread`) |
+| POST | `/support/chat/messages/` | JSON `{ body, order? }`, or multipart with `image` (JPG/PNG/WebP, ≤ 8 MB) | `201 ChatMessage` |
+| POST | `/support/chat/read/` | `{ message_id? }` (default: everything) | `{ unread }` |
+| GET | `/support/chat/unread/` | | `{ unread }`, for the badge (polled every minute) |
+
+A message has `sender` (`customer` or `staff`), `body`, `image` (`{ url, width, height }`), `order` (`{ id, number }`) and `kind`: `text`, or `event` with `event: "closed"` when staff ended the conversation. `conversation.staff_last_read` is the last message id staff have seen, for the ✓✓. Photos are resized to 1600 px and saved again without their EXIF data (no location). Sending is limited to 30 messages a minute (`CHAT_MESSAGE_RATE`).
+
 For WebOTP autofill on Android, the SMS must end with a line like `@rocket-market.example #1234` (the site's domain).
 
 Payments: `POST /payments/webhook/{provider}/` receives signed gateway callbacks (each event handled once). With the test gateway (`PAYMENT_PROVIDER=dummy`), the storefront's `/payment/mock` page calls `POST /payments/mock/confirm/ { order_id, result }`. That endpoint returns 404 once a real gateway is configured.

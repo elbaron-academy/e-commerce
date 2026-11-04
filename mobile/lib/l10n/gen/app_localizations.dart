@@ -1417,6 +1417,186 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اسحب لتحديث حالة الطلب'**
   String get ordersPullToRefresh;
+
+  /// No description provided for @chatTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلّمنا'**
+  String get chatTitle;
+
+  /// No description provided for @chatSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق روكت بيرد عليك في دقايق'**
+  String get chatSubtitle;
+
+  /// No description provided for @chatOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلّمنا'**
+  String get chatOpen;
+
+  /// No description provided for @chatHelp.
+  ///
+  /// In ar, this message translates to:
+  /// **'محتاج مساعدة؟'**
+  String get chatHelp;
+
+  /// No description provided for @chatHelpOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'عندك سؤال عن الطلب ده؟ كلّمنا'**
+  String get chatHelpOrder;
+
+  /// No description provided for @chatWelcome.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلاً بيك! 👋 ابعتلنا سؤالك عن أي طلب أو منتج، وفريق روكت هيرد عليك في أسرع وقت.'**
+  String get chatWelcome;
+
+  /// No description provided for @chatHours.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنرد من 9 الصبح لـ 11 بالليل كل يوم.'**
+  String get chatHours;
+
+  /// No description provided for @chatPlaceholder.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالتك…'**
+  String get chatPlaceholder;
+
+  /// No description provided for @chatSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابعت'**
+  String get chatSend;
+
+  /// No description provided for @chatPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابعت صورة'**
+  String get chatPhoto;
+
+  /// No description provided for @chatRemovePhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'شيل الصورة'**
+  String get chatRemovePhoto;
+
+  /// No description provided for @chatAboutOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'بخصوص طلب {number}'**
+  String chatAboutOrder(String number);
+
+  /// No description provided for @chatRemoveOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'شيل الطلب'**
+  String get chatRemoveOrder;
+
+  /// No description provided for @chatSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق روكت'**
+  String get chatSupport;
+
+  /// No description provided for @chatYou.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنت'**
+  String get chatYou;
+
+  /// No description provided for @chatSending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيتبعت…'**
+  String get chatSending;
+
+  /// No description provided for @chatSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتبعتت'**
+  String get chatSent;
+
+  /// No description provided for @chatSeen.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتشافت'**
+  String get chatSeen;
+
+  /// No description provided for @chatFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'متبعتتش. دوس عشان تحاول تاني'**
+  String get chatFailed;
+
+  /// No description provided for @chatOlder.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسائل أقدم'**
+  String get chatOlder;
+
+  /// No description provided for @chatClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحادثة دي خلصت. ابعت رسالة لو محتاج حاجة تانية.'**
+  String get chatClosed;
+
+  /// No description provided for @chatNewMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسائل جديدة'**
+  String get chatNewMessages;
+
+  /// No description provided for @chatToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'النهارده'**
+  String get chatToday;
+
+  /// No description provided for @chatYesterday.
+  ///
+  /// In ar, this message translates to:
+  /// **'امبارح'**
+  String get chatYesterday;
+
+  /// No description provided for @chatUnread.
+  ///
+  /// In ar, this message translates to:
+  /// **'{number} رسالة جديدة'**
+  String chatUnread(String number);
+
+  /// No description provided for @chatPhotoMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'📷 صورة'**
+  String get chatPhotoMessage;
+
+  /// No description provided for @chatPhotoGallery.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الصور'**
+  String get chatPhotoGallery;
+
+  /// No description provided for @chatPhotoCamera.
+  ///
+  /// In ar, this message translates to:
+  /// **'صوّر دلوقتي'**
+  String get chatPhotoCamera;
+
+  /// No description provided for @chatPhotoFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نفتح الصورة.'**
+  String get chatPhotoFailed;
+
+  /// No description provided for @chatViewPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصورة'**
+  String get chatViewPhoto;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
