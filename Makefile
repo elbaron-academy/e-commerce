@@ -15,12 +15,13 @@ WEB_PORT ?= 3000
         migrate makemigrations seed superuser roles shell reset-db \
         test test-backend test-storefront coverage lint format check build \
         docker-build docker-up docker-down docker-logs docker-seed \
+        mobile-install mobile mobile-prod mobile-test mobile-lint mobile-format mobile-l10n mobile-apk \
         deploy-key known-hosts server-setup ssh logs-api logs-web status rollback-api rollback-web
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage: make \033[36m<target>\033[0m\n"} \
 		/^##@/ {printf "\n\033[1m%s\033[0m\n", substr($$0, 5)} \
-		/^[a-zA-Z_-]+:.*##/ {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+		/^[a-zA-Z0-9_-]+:.*##/ {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 ##@ Setup
 install: backend-install storefront-install ## Install backend and storefront dependencies
@@ -101,6 +102,34 @@ check: lint test ## Lint + tests (same as CI)
 
 build: ## Production build of the storefront
 	cd storefront && npm run build
+
+##@ Mobile app (Flutter, in mobile/)
+DART_SOURCES = $$(find lib test -name '*.dart' -not -path 'lib/l10n/gen/*')
+
+mobile-install: ## Install the app's packages
+	cd mobile && flutter pub get
+
+mobile: ## Run the app (dev flavor) against the local API; needs `make api`
+	cd mobile && flutter run -t lib/main_dev.dart
+
+mobile-prod: ## Run the app against the production API
+	cd mobile && flutter run -t lib/main_prod.dart
+
+mobile-test: ## App tests
+	cd mobile && flutter test
+
+mobile-lint: ## Format check + static analysis
+	cd mobile && dart format --output=none --set-exit-if-changed $(DART_SOURCES) && flutter analyze
+
+mobile-format: ## Format the app's code
+	cd mobile && dart format $(DART_SOURCES)
+
+mobile-l10n: ## Regenerate translations after editing lib/l10n/arb/*.arb
+	cd mobile && flutter gen-l10n
+
+mobile-apk: ## Release APK (prod flavor)
+	cd mobile && flutter build apk --release -t lib/main_prod.dart
+	@echo "APK: mobile/build/app/outputs/flutter-apk/app-release.apk"
 
 ##@ Docker (local only, not used on the server yet)
 docker-build: ## Build the images

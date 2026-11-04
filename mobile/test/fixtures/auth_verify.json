@@ -1,0 +1,12 @@
+{
+ "access": "redacted",
+ "refresh": "redacted",
+ "user": {
+  "id": 2,
+  "phone": "01229008378",
+  "name": "",
+  "email": "",
+  "language": "ar"
+ },
+ "is_new": true
+}

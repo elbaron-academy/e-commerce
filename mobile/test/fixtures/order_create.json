@@ -1,0 +1,107 @@
+{
+ "order": {
+  "id": 2,
+  "number": "RK-000002",
+  "status": "placed",
+  "created_at": "2026-11-04T13:50:50.087757+02:00",
+  "method": "delivery",
+  "payment_method": "cod",
+  "payment_status": "cod",
+  "items": [
+   {
+    "sku": "RK-0001-1",
+    "slug": "banana",
+    "name": "موز",
+    "variant_label": "للكيلو",
+    "emoji": "🍌",
+    "color": "#E3F3DC",
+    "image": null,
+    "qty": 2.0,
+    "unit_price": 32.0,
+    "line_total": 64.0,
+    "sold_by_weight": true
+   },
+   {
+    "sku": "RK-0014-2",
+    "slug": "full-cream-milk",
+    "name": "لبن كامل الدسم",
+    "variant_label": "2 لتر",
+    "emoji": "🥛",
+    "color": "#E4EEFA",
+    "image": null,
+    "qty": 2.0,
+    "unit_price": 72.0,
+    "line_total": 144.0,
+    "sold_by_weight": false
+   },
+   {
+    "sku": "RK-0036-2",
+    "slug": "egyptian-rice",
+    "name": "أرز مصري",
+    "variant_label": "5 كجم",
+    "emoji": "🍚",
+    "color": "#F4ECDA",
+    "image": null,
+    "qty": 1.0,
+    "unit_price": 169.0,
+    "line_total": 169.0,
+    "sold_by_weight": false
+   }
+  ],
+  "subtotal": 377.0,
+  "coupon_discount": 37.7,
+  "delivery_fee": 30.0,
+  "total": 369.3,
+  "coupon": "ROCKET10",
+  "notes": "",
+  "address": {
+   "id": 2,
+   "label": "",
+   "zone": "giza",
+   "area": "الدقي",
+   "street": "شارع التحرير",
+   "building": "12",
+   "floor": "",
+   "apartment": "",
+   "notes": "",
+   "lat": null,
+   "lng": null,
+   "zone_name": "الجيزة",
+   "is_default": false
+  },
+  "slot": {
+   "date": "2026-11-04",
+   "start": "17:00",
+   "end": "19:00",
+   "express": false
+  },
+  "timeline": [
+   {
+    "status": "placed",
+    "at": "2026-11-04T13:50:50.093403+02:00",
+    "done": true
+   },
+   {
+    "status": "confirmed",
+    "at": null,
+    "done": false
+   },
+   {
+    "status": "preparing",
+    "at": null,
+    "done": false
+   },
+   {
+    "status": "out_for_delivery",
+    "at": null,
+    "done": false
+   },
+   {
+    "status": "delivered",
+    "at": null,
+    "done": false
+   }
+  ]
+ },
+ "payment_url": null
+}

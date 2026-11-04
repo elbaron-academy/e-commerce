@@ -1,0 +1,360 @@
+{
+  "@@locale": "ar",
+  "brandName": "روكت ماركت",
+  "brandTagline": "سوبر ماركت أونلاين: خضار وفاكهة وبقالة لحد باب البيت",
+  "navHome": "الرئيسية",
+  "navCategories": "الأقسام",
+  "navCart": "السلة",
+  "navOrders": "طلباتي",
+  "navAccount": "حسابي",
+  "navSearch": "بحث",
+  "navMain": "التنقل الرئيسي",
+  "headerSearchPlaceholder": "دوّر على منتج أو قسم…",
+  "headerLogin": "دخول",
+  "headerSwitchLang": "English",
+  "commonSeeAll": "عرض الكل",
+  "commonLoadMore": "عرض المزيد",
+  "commonBack": "رجوع",
+  "commonRetry": "حاول تاني",
+  "commonSave": "حفظ",
+  "commonCancel": "إلغاء",
+  "commonDelete": "حذف",
+  "commonClose": "إغلاق",
+  "commonLoading": "جاري التحميل…",
+  "commonError": "حصلت مشكلة، حاول تاني.",
+  "commonAll": "الكل",
+  "commonOptional": "اختياري",
+  "commonFree": "مجانًا",
+  "commonEdit": "تعديل",
+  "commonContinue": "متابعة",
+  "commonStartShopping": "ابدأ التسوق",
+  "commonGoHome": "الرجوع للرئيسية",
+  "unitsKg": "كجم",
+  "unitsG": "جم",
+  "productAdd": "أضف",
+  "productAddToCart": "أضف للسلة",
+  "productOutOfStock": "غير متوفر",
+  "productOff": "خصم {n}%",
+  "productInStock": "متوفر",
+  "productLowStock": "باقي {n} بس",
+  "productDescription": "عن المنتج",
+  "productRelated": "منتجات ممكن تعجبك",
+  "productChooseSize": "اختار الحجم",
+  "productMaxReached": "وصلت للحد الأقصى لكمية المنتج ده",
+  "productBrand": "الماركة",
+  "productOfferEnds": "العرض لحد {date}",
+  "productWeightNote": "الوزن تقريبي. هتدفع حسب الوزن الفعلي وقت التجهيز.",
+  "productPerKg": "للكيلو",
+  "productInCart": "في السلة",
+  "productDecrease": "قلل الكمية",
+  "productIncrease": "زود الكمية",
+  "productRemove": "شيل من السلة",
+  "productDeliveryPromise": "يوصلك النهارده لو طلبت قبل 9 بالليل",
+  "productNotFound": "المنتج ده مش موجود",
+  "sortLabel": "ترتيب حسب",
+  "sortRecommended": "المقترح",
+  "sortBest": "الأكثر مبيعًا",
+  "sortPriceAsc": "السعر: من الأقل",
+  "sortPriceDesc": "السعر: من الأعلى",
+  "sortDiscount": "أعلى خصم",
+  "sortNewest": "الأحدث",
+  "homeCategories": "تسوق حسب القسم",
+  "homeExpress": "توصيل خلال 60 دقيقة",
+  "homeFreeDelivery": "توصيل مجاني فوق {amount}",
+  "homePickup": "استلم من روكت مول",
+  "categoryCount": "{n} منتج",
+  "categoryEmpty": "مفيش منتجات هنا دلوقتي.",
+  "categoryAllCategories": "كل الأقسام",
+  "searchTitle": "البحث",
+  "searchRecent": "عمليات البحث الأخيرة",
+  "searchClear": "مسح",
+  "searchPopular": "الأكثر بحثًا",
+  "searchResults": "{n} نتيجة لـ «{q}»",
+  "searchNoResults": "مفيش نتائج لـ «{q}»",
+  "searchTryAnother": "جرب كلمة تانية أو تصفح الأقسام.",
+  "searchSubmit": "بحث",
+  "searchInCategory": "قسم",
+  "searchTagsOffer": "عروض الأسبوع",
+  "searchTagsBest": "الأكثر مبيعًا",
+  "searchTagsNew": "وصل حديثًا",
+  "cartTitle": "سلة المشتريات",
+  "cartEmpty": "سلتك فاضية",
+  "cartEmptyHint": "ضيف خضار وفاكهة وكل طلبات البيت، وهنوصلهالك بسرعة.",
+  "cartItems": "{n} منتج",
+  "cartSummary": "ملخص الطلب",
+  "cartSubtotal": "المجموع الفرعي",
+  "cartSavings": "وفرت",
+  "cartCoupon": "كود الخصم",
+  "cartCouponPlaceholder": "عندك كود خصم؟",
+  "cartApply": "تطبيق",
+  "cartRemoveCoupon": "شيل الكود",
+  "cartDelivery": "التوصيل",
+  "cartDeliveryFrom": "التوصيل (يبدأ من)",
+  "cartTotal": "الإجمالي",
+  "cartVatIncluded": "الأسعار شاملة ضريبة القيمة المضافة",
+  "cartCheckout": "إتمام الطلب",
+  "cartLoginToCheckout": "سجل دخول وكمل الطلب",
+  "cartFreeDeliveryLeft": "ضيف {amount} كمان والتوصيل يبقى مجاني",
+  "cartFreeDeliveryReached": "مبروك! التوصيل مجاني لطلبك",
+  "cartRemoveUnavailable": "شيل المنتجات غير المتوفرة",
+  "cartUnavailable": "مش متوفر دلوقتي",
+  "cartPriceUpdated": "السعر اتغير",
+  "cartOfflineEstimate": "أنت أوفلاين: الأسعار تقريبية لحد ما النت يرجع.",
+  "cartClear": "فضّي السلة",
+  "checkoutTitle": "إتمام الطلب",
+  "checkoutMethod": "طريقة الاستلام",
+  "checkoutDelivery": "توصيل للبيت",
+  "checkoutPickup": "استلام من روكت مول",
+  "checkoutAddress": "عنوان التوصيل",
+  "checkoutAddAddress": "إضافة عنوان جديد",
+  "checkoutNoAddresses": "مفيش عناوين محفوظة. ضيف عنوانك عشان نوصلك.",
+  "checkoutTime": "ميعاد التوصيل",
+  "checkoutPickupTime": "ميعاد الاستلام",
+  "checkoutExpress": "توصيل سريع خلال 60–90 دقيقة",
+  "checkoutToday": "النهارده",
+  "checkoutTomorrow": "بكرة",
+  "checkoutFull": "محجوز",
+  "checkoutPayment": "طريقة الدفع",
+  "checkoutCod": "كاش عند الاستلام",
+  "checkoutCodUnavailable": "الدفع كاش متاح للطلبات لحد {amount}",
+  "checkoutCard": "بطاقة بنكية",
+  "checkoutCardHint": "فيزا أو ماستركارد، دفع آمن بـ 3D Secure",
+  "checkoutWallet": "محفظة إلكترونية",
+  "checkoutWalletHint": "فودافون كاش وغيرها",
+  "checkoutNotes": "ملاحظات للمندوب",
+  "checkoutNotesPlaceholder": "مثلًا: رن الجرس مرة واحدة",
+  "checkoutPlaceOrder": "تأكيد الطلب",
+  "checkoutPayNow": "ادفع {amount}",
+  "checkoutPlacing": "جاري تأكيد الطلب…",
+  "checkoutChooseAddress": "اختار عنوان التوصيل",
+  "checkoutChooseSlot": "اختار ميعاد",
+  "checkoutEmptyCart": "سلتك فاضية، ضيف منتجات الأول.",
+  "addressLabel": "اسم العنوان",
+  "addressLabelPlaceholder": "البيت، الشغل…",
+  "addressZone": "المحافظة",
+  "addressArea": "المنطقة",
+  "addressStreet": "الشارع",
+  "addressBuilding": "رقم العمارة",
+  "addressFloor": "الدور",
+  "addressApartment": "الشقة",
+  "addressNotes": "علامة مميزة",
+  "addressUseLocation": "حدد موقعي الحالي",
+  "addressLocating": "بنحدد موقعك…",
+  "addressLocated": "تم تحديد الموقع",
+  "addressLocationFailed": "مقدرناش نحدد موقعك",
+  "addressSave": "حفظ العنوان",
+  "addressDefault": "الافتراضي",
+  "addressDeliveryFee": "رسوم التوصيل {amount}",
+  "authTitle": "أهلًا بيك في روكت",
+  "authSubtitle": "سجل دخول برقم موبايلك عشان تكمل طلبك وتتابعه.",
+  "authPhone": "رقم الموبايل",
+  "authPhonePlaceholder": "01xxxxxxxxx",
+  "authSendCode": "ابعت كود التحقق",
+  "authCodeTitle": "اكتب كود التحقق",
+  "authCodeSent": "بعتنا كود من 4 أرقام على {phone}",
+  "authCode": "كود التحقق",
+  "authVerify": "تأكيد",
+  "authResend": "ابعت الكود تاني",
+  "authResendIn": "تقدر تطلب كود جديد بعد {s} ثانية",
+  "authChangePhone": "غير الرقم",
+  "authDemoHint": "نسخة تجريبية: الكود هو 1234",
+  "authNameTitle": "نتعرف عليك؟",
+  "authName": "اسمك",
+  "authFinish": "يلا نتسوق",
+  "authSkip": "بعدين",
+  "authInvalidPhone": "اكتب رقم موبايل مصري صحيح (11 رقم)",
+  "accountTitle": "حسابي",
+  "accountProfile": "بياناتي",
+  "accountName": "الاسم",
+  "accountEmail": "البريد الإلكتروني",
+  "accountLanguage": "اللغة",
+  "accountAddresses": "عناويني",
+  "accountOrders": "طلباتي",
+  "accountLogout": "تسجيل الخروج",
+  "accountSaved": "اتحفظت البيانات",
+  "accountGuest": "زائر",
+  "ordersTitle": "طلباتي",
+  "ordersEmpty": "لسه مطلبتش حاجة",
+  "ordersEmptyHint": "أول طلب ليك هيظهر هنا وتقدر تتابعه لحظة بلحظة.",
+  "ordersNumber": "طلب رقم {n}",
+  "ordersItems": "{n} منتج",
+  "ordersPlaced": "اتأكد طلبك! هنبدأ نجهزه دلوقتي.",
+  "ordersPaid": "تم الدفع بنجاح وطلبك اتأكد.",
+  "ordersTracking": "متابعة الطلب",
+  "ordersReorder": "اطلبه تاني",
+  "ordersReordered": "المنتجات اتضافت للسلة",
+  "ordersDeliverTo": "التوصيل إلى",
+  "ordersPickupFrom": "الاستلام من",
+  "ordersSlot": "الميعاد",
+  "ordersPaymentMethod": "الدفع",
+  "ordersDetails": "تفاصيل الطلب",
+  "ordersStatusPendingPayment": "في انتظار الدفع",
+  "ordersStatusPlaced": "تم استلام الطلب",
+  "ordersStatusConfirmed": "تم التأكيد",
+  "ordersStatusPreparing": "بيتجهز",
+  "ordersStatusOutForDelivery": "مع المندوب",
+  "ordersStatusReadyForPickup": "جاهز للاستلام",
+  "ordersStatusDelivered": "تم التوصيل",
+  "ordersStatusCollected": "تم الاستلام",
+  "ordersStatusCancelled": "اتلغى",
+  "paymentTitle": "بوابة الدفع التجريبية",
+  "paymentHint": "دي صفحة تجريبية بدل بوابة الدفع الحقيقية. اختار النتيجة اللي عايز تجربها.",
+  "paymentAmount": "المبلغ المطلوب",
+  "paymentSuccess": "ادفع بنجاح",
+  "paymentFail": "جرب فشل الدفع",
+  "paymentFailed": "الدفع مكملش. الطلب اتلغى وسلتك لسه زي ما هي.",
+  "paymentBackToCart": "الرجوع للسلة",
+  "pwaOffline": "أنت أوفلاين دلوقتي، وبنعرضلك آخر بيانات محفوظة.",
+  "errorNotFound": "الصفحة دي مش موجودة",
+  "errorGeneric": "حصلت مشكلة غير متوقعة",
+  "languageArabic": "العربية",
+  "languageEnglish": "English",
+  "accountSignInPrompt": "سجل دخول عشان تتابع طلباتك وعناوينك.",
+  "accountVersion": "الإصدار {version}",
+  "paymentExternal": "كمل الدفع في الصفحة اللي اتفتحت، وبعدين ارجع للتطبيق.",
+  "paymentCheckStatus": "شوف حالة الطلب",
+  "errorNetwork": "مفيش اتصال بالنت. جرب تاني.",
+  "errorSessionExpired": "انتهت الجلسة، سجل دخول تاني.",
+  "productQuantity": "الكمية",
+  "sortApply": "ترتيب النتائج",
+  "searchSeeResults": "عرض كل النتائج لـ «{q}»",
+  "addressTitle": "عنوان جديد",
+  "checkoutSummaryItems": "{n} منتج",
+  "ordersPullToRefresh": "اسحب لتحديث حالة الطلب",
+  "@productOff": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@productLowStock": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@productOfferEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@homeFreeDelivery": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryCount": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@searchResults": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      },
+      "q": {
+        "type": "String"
+      }
+    }
+  },
+  "@searchNoResults": {
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
+  },
+  "@cartItems": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@cartFreeDeliveryLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@checkoutCodUnavailable": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@checkoutPayNow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@addressDeliveryFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@authCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@authResendIn": {
+    "placeholders": {
+      "s": {
+        "type": "String"
+      }
+    }
+  },
+  "@ordersNumber": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@ordersItems": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "@accountVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@searchSeeResults": {
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
+  },
+  "@checkoutSummaryItems": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  }
+}
