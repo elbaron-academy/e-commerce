@@ -1,5 +1,5 @@
 [Unit]
-Description=Rocket Market API (Django + gunicorn)
+Description=Rocket Market API (Django + gunicorn on 127.0.0.1:8077)
 ConditionPathExists=/opt/rocket/backend/manage.py
 After=network.target
 

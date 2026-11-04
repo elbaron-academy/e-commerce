@@ -33,20 +33,10 @@ if grep -qi '^SEED_DEMO=true' "$APP/.env"; then
   "$PY" manage.py seed_demo --if-empty
 fi
 
-echo "==> systemd service files"
-units_changed=0
-for unit in "$DEST"/deploy/systemd/*; do
-  target="/etc/systemd/system/$(basename "$unit")"
-  rendered="$(sed "s/__USER__/$(whoami)/g" "$unit")"
-  if ! printf '%s\n' "$rendered" | cmp -s - "$target"; then
-    if printf '%s\n' "$rendered" | sudo -n tee "$target" >/dev/null; then
-      echo "updated $(basename "$unit")"; units_changed=1
-    else
-      echo "!! Could not update $target (no sudo rights). Run the Server setup workflow."
-    fi
-  fi
-done
-if [ "$units_changed" = 1 ]; then sudo -n systemctl daemon-reload; fi
+echo "==> Server config (systemd + nginx)"
+if ! sudo -n bash "$DEST/deploy/scripts/sync-server-config.sh" "$(whoami)"; then
+  echo "!! Could not update systemd/nginx files (needs passwordless sudo). Run the Server setup workflow."
+fi
 
 echo "==> Switching to the new release"
 # A real directory left from a manual install is moved aside, not deleted.
@@ -58,8 +48,19 @@ ln -sfn "$DEST/deploy" "$APP/deploy.next" && mv -Tf "$APP/deploy.next" "$APP/dep
 sudo systemctl restart rocket-api
 
 echo "==> Health check"
-sleep 2
-curl -fsS --retry 15 --retry-delay 2 --retry-connrefused -H "Host: 127.0.0.1" http://127.0.0.1:8000/api/health/ && echo
+API_PORT=8077
+healthy=0
+for _ in $(seq 1 20); do
+  sleep 2
+  if curl -fsS -m 5 -H "Host: 127.0.0.1" "http://127.0.0.1:$API_PORT/api/health/"; then healthy=1; echo; break; fi
+done
+if [ "$healthy" != 1 ]; then
+  echo "!! The API did not start. Service log:"
+  sudo -n journalctl -u rocket-api -n 30 --no-pager -o cat 2>/dev/null | grep -vE '"(GET|POST|HEAD|PUT|PATCH|DELETE|OPTIONS) ' || true
+  echo "Listening on port $API_PORT:"
+  sudo -n ss -ltnp "sport = :$API_PORT" 2>/dev/null || true
+  exit 1
+fi
 
 echo "==> Cleaning up old releases (keeping $KEEP)"
 ls -1dt "$APP"/releases/backend-* | tail -n +$((KEEP + 1)) | xargs -r rm -rf

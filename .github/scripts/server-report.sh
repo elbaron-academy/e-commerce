@@ -10,7 +10,12 @@ if [ "${master:-0}" -gt 0 ]; then
   echo "gunicorn: 1 master (pid $master) · workers: $(echo "$children" | wc -w) · threads per worker: ${threads:-?}"
 fi
 echo "configured: $(grep -E '^GUNICORN_(WORKERS|THREADS)=' "$APP/.env" 2>/dev/null | tr '\n' ' ')"
-echo "local checks: API $(curl -s -m 5 -H 'Host: 127.0.0.1' http://127.0.0.1:8000/api/health/ || echo down) · storefront HTTP $(curl -s -o /dev/null -w '%{http_code}' -m 5 http://127.0.0.1:3000/ || echo down)"
+echo "local checks: API $(curl -s -m 5 -H 'Host: 127.0.0.1' http://127.0.0.1:8077/api/health/ || echo down) · storefront HTTP $(curl -s -o /dev/null -w '%{http_code}' -m 5 http://127.0.0.1:3000/ || echo down)"
+echo "ports: $(sudo -n ss -ltnpH 2>/dev/null | awk '$4 ~ /:(3000|8000|8077)$/ {split($6, p, "\""); printf "%s → %s  ", $4, p[2]}')"
+if [ "$(systemctl is-active rocket-api)" != active ]; then
+  echo "rocket-api log:"
+  sudo -n journalctl -u rocket-api -n 15 --no-pager -o cat 2>/dev/null | grep -vE '"(GET|POST|HEAD|PUT|PATCH|DELETE|OPTIONS) '
+fi
 if [ -L "$APP/backend" ]; then
   echo "releases: backend $(basename "$(dirname "$(readlink -f "$APP/backend")")") · storefront $(basename "$(readlink -f /var/www/html/rocket/current 2>/dev/null)")"
 fi
@@ -22,11 +27,11 @@ for d in rocket.hossam-ameen.online api.rocket.hossam-ameen.online; do
   fi
 done
 if [ -f "$APP/backend/manage.py" ]; then
-  counts="$(cd "$APP/backend" && DJANGO_SETTINGS_MODULE=config.settings.prod DJANGO_ENV_FILE="$APP/.env" "$APP/venv/bin/python" manage.py shell -c "
+  counts="$(cd "$APP/backend" && DJANGO_SETTINGS_MODULE=config.settings.prod DJANGO_ENV_FILE="$APP/.env" "$APP/venv/bin/python" manage.py shell --no-imports -c "
 from apps.accounts.models import User
 from apps.catalog.models import Product
 from apps.orders.models import Order
 print(f'superusers {User.objects.filter(is_superuser=True).count()} · products {Product.objects.count()} · orders {Order.objects.count()}')" 2>/dev/null)"
   echo "database: ${counts:-unavailable}"
 fi
-echo "system: $(. /etc/os-release && echo "$PRETTY_NAME") · python $(python3 -V 2>&1 | cut -d' ' -f2) · node $(node -v 2>/dev/null || echo none) · nginx $(nginx -v 2>&1 | cut -d/ -f2)"
+echo "system: $(. /etc/os-release && echo "$PRETTY_NAME") · python $(python3 -V 2>&1 | cut -d' ' -f2) · node $(node -v 2>/dev/null || echo none) · nginx $(/usr/sbin/nginx -v 2>&1 | cut -d/ -f2)"

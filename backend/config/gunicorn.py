@@ -2,7 +2,8 @@
 
 import os
 
-bind = os.environ.get("GUNICORN_BIND", "127.0.0.1:8000")
+# 8077: port 8000 is already used by another app on the production VM.
+bind = os.environ.get("GUNICORN_BIND", "127.0.0.1:8077")
 workers = int(os.environ.get("GUNICORN_WORKERS", "1"))
 threads = int(os.environ.get("GUNICORN_THREADS", "1"))
 timeout = int(os.environ.get("GUNICORN_TIMEOUT", "60"))

@@ -3,7 +3,7 @@
 | | URL | On the VM |
 | --- | --- | --- |
 | Storefront | https://rocket.hossam-ameen.online | `/var/www/html/rocket` (Nuxt server on 127.0.0.1:3000) |
-| API | https://api.rocket.hossam-ameen.online | `/opt/rocket` (gunicorn on 127.0.0.1:8000) |
+| API | https://api.rocket.hossam-ameen.online | `/opt/rocket` (gunicorn on 127.0.0.1:8077; port 8000 belongs to another app on the VM) |
 
 VM: `hossam@35.226.179.10`. nginx sits in front of both, with HTTPS from Let's Encrypt. Services run with systemd (no Docker on the server for now). The database is SQLite in `/opt/rocket/data/db.sqlite3`, backed up every night.
 

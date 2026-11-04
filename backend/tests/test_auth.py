@@ -190,4 +190,4 @@ def test_email_login_ignores_customers(api, customer):
 def test_gunicorn_defaults():
     from config import gunicorn
 
-    assert (gunicorn.workers, gunicorn.threads, gunicorn.bind) == (1, 1, "127.0.0.1:8000")
+    assert (gunicorn.workers, gunicorn.threads, gunicorn.bind) == (1, 1, "127.0.0.1:8077")

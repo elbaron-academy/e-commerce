@@ -18,7 +18,7 @@ WEB_DIR=/var/www/html/rocket
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"   # the deploy/ folder
 
 log() { printf '\n\033[1;32m==> %s\033[0m\n' "$*"; }
-warn() { printf '\n\033[1;33m!! %s\033[0m\n' "$*"; }
+warn() { printf '\n!! %s\n' "$*"; }
 
 [ "$(id -u)" -eq 0 ] || { echo "Run this script with sudo."; exit 1; }
 id "$DEPLOY_USER" >/dev/null 2>&1 || { echo "User $DEPLOY_USER does not exist."; exit 1; }
@@ -56,11 +56,8 @@ chmod 640 "$APP_DIR/storefront.env"
 log "Python virtualenv"
 [ -x "$APP_DIR/venv/bin/python" ] || sudo -u "$DEPLOY_USER" python3 -m venv "$APP_DIR/venv"
 
-log "systemd services"
-for unit in "$SRC"/systemd/*; do
-  sed "s/__USER__/$DEPLOY_USER/g" "$unit" > "/etc/systemd/system/$(basename "$unit")"
-done
-systemctl daemon-reload
+log "systemd services and nginx sites"
+bash "$SRC/scripts/sync-server-config.sh" "$DEPLOY_USER"
 systemctl enable rocket-api.service rocket-web.service >/dev/null
 systemctl enable --now rocket-jobs.timer rocket-backup.timer >/dev/null
 
@@ -72,41 +69,19 @@ SUDO
 chmod 440 /etc/sudoers.d/rocket-deploy
 visudo -cf /etc/sudoers.d/rocket-deploy >/dev/null
 
-log "nginx"
-install -m 644 "$SRC/nginx/rocket-ssl.conf" /etc/nginx/snippets/rocket-ssl.conf
+log "HTTPS certificates"
 have_cert() { [ -f "/etc/letsencrypt/live/$1/fullchain.pem" ]; }
-# Drop IPv6 listen lines on machines where IPv6 is disabled.
-site_filter() { if [ -f /proc/net/if_inet6 ]; then cat; else grep -v 'listen \[::\]'; fi; }
-install_full_sites() {
-  site_filter < "$SRC/nginx/$WEB_DOMAIN.conf" > "/etc/nginx/sites-available/$WEB_DOMAIN.conf"
-  site_filter < "$SRC/nginx/$API_DOMAIN.conf" > "/etc/nginx/sites-available/$API_DOMAIN.conf"
-  ln -sfn "/etc/nginx/sites-available/$WEB_DOMAIN.conf" "/etc/nginx/sites-enabled/$WEB_DOMAIN.conf"
-  ln -sfn "/etc/nginx/sites-available/$API_DOMAIN.conf" "/etc/nginx/sites-enabled/$API_DOMAIN.conf"
-  rm -f /etc/nginx/sites-enabled/rocket-bootstrap.conf
-}
-if have_cert "$WEB_DOMAIN" && have_cert "$API_DOMAIN"; then
-  install_full_sites
-else
-  sed -e "s/__WEB_DOMAIN__/$WEB_DOMAIN/g" -e "s/__API_DOMAIN__/$API_DOMAIN/g" "$SRC/nginx/bootstrap-http.conf" | site_filter > /etc/nginx/sites-available/rocket-bootstrap.conf
-  ln -sfn /etc/nginx/sites-available/rocket-bootstrap.conf /etc/nginx/sites-enabled/rocket-bootstrap.conf
-  nginx -t && systemctl reload nginx
-
-  log "Requesting HTTPS certificates"
+if ! { have_cert "$WEB_DOMAIN" && have_cert "$API_DOMAIN"; }; then
   email_args=(--register-unsafely-without-email)
   [ -n "$CERTBOT_EMAIL" ] && email_args=(--email "$CERTBOT_EMAIL")
-  ok=1
   for domain in "$WEB_DOMAIN" "$API_DOMAIN"; do
     have_cert "$domain" && continue
     certbot certonly --webroot -w /var/www/certbot -d "$domain" --cert-name "$domain" \
-      --non-interactive --agree-tos "${email_args[@]}" --deploy-hook "systemctl reload nginx" || ok=0
+      --non-interactive --agree-tos "${email_args[@]}" --deploy-hook "systemctl reload nginx" \
+      || warn "Could not get a certificate for $domain. Check its DNS A record and that ports 80/443 are open, then run this script again. Sites work over HTTP meanwhile."
   done
-  if [ "$ok" = 1 ]; then
-    install_full_sites
-  else
-    warn "Could not get certificates. Check that DNS A records for $WEB_DOMAIN and $API_DOMAIN point to this server and ports 80/443 are open, then run this script again. Sites work over HTTP meanwhile."
-  fi
+  bash "$SRC/scripts/sync-server-config.sh" "$DEPLOY_USER"   # switch to the HTTPS sites
 fi
-nginx -t && systemctl reload nginx
 
 if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
   ufw allow 'Nginx Full' >/dev/null && echo "ufw: allowed HTTP/HTTPS"
