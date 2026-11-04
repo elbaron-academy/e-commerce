@@ -9,7 +9,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DATABASE_URL=sqlite:////data/db.sqlite3 \
     CACHE_DIR=/data/cache \
     MEDIA_ROOT=/data/media \
-    STATIC_ROOT=/app/staticfiles
+    STATIC_ROOT=/app/staticfiles \
+    GUNICORN_BIND=0.0.0.0:8000
 
 WORKDIR /app
 RUN useradd --create-home --uid 1000 rocket
@@ -22,4 +23,4 @@ USER rocket
 VOLUME ["/data"]
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/')"
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_demo --if-empty && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2 --access-logfile -"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_demo --if-empty && gunicorn config.wsgi:application --config python:config.gunicorn"]

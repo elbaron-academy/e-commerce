@@ -39,7 +39,7 @@ The host (`35.226.179.10`) and user (`hossam`) are already defaults in the workf
 
 ### 3. Prepare the server
 
-Pick one of these:
+The CI/CD deploy does this automatically when the server isn't set up yet, or while HTTPS certificates are missing. It needs `hossam` to have passwordless sudo, which is the default on Google Cloud. To run it yourself, pick one of these:
 
 - **From GitHub:** Actions → **Server setup** → Run workflow (optionally enter an email for certificate expiry notices). It needs `hossam` to have passwordless sudo, which is the default on Google Cloud.
 - **From your computer:** `make server-setup`, or by hand:
@@ -67,13 +67,15 @@ It doesn't touch other nginx sites on the machine.
 
 Push to `main`, or run **Actions → CI/CD → Run workflow**. On the first deploy the database is created and the demo catalog is loaded.
 
-Create your admin account on the VM:
+Create (or reset) the admin account on the VM. Admins sign in with their email:
 
 ```bash
-ssh -t hossam@35.226.179.10 'cd /opt/rocket/backend && DJANGO_SETTINGS_MODULE=config.settings.prod DJANGO_ENV_FILE=/opt/rocket/.env /opt/rocket/venv/bin/python manage.py createsuperuser'
+ssh -t hossam@35.226.179.10 'read -rsp "Admin password: " ADMIN_PASSWORD && echo && export ADMIN_PASSWORD && cd /opt/rocket/backend && DJANGO_SETTINGS_MODULE=config.settings.prod DJANGO_ENV_FILE=/opt/rocket/.env /opt/rocket/venv/bin/python manage.py ensure_admin --email admin@example.com'
 ```
 
-Then sign in at https://api.rocket.hossam-ameen.online/admin/ (phone + password). API docs: https://api.rocket.hossam-ameen.online/api/docs/
+The password is typed on the VM, so it never ends up in GitHub or your shell history. Then sign in at https://api.rocket.hossam-ameen.online/admin/ with the email and password. Staff can also sign in with a phone number; customers' phone-code login never works for staff accounts. API docs: https://api.rocket.hossam-ameen.online/api/docs/
+
+Every deploy ends with a **Server report** on the workflow run page: DNS, HTTPS, service status, gunicorn workers and threads, certificates and record counts.
 
 ## How a deploy works
 
@@ -92,6 +94,7 @@ Then sign in at https://api.rocket.hossam-ameen.online/admin/ (phone + password)
 | Storefront logs | `make logs-web` |
 | Roll back the API / storefront | `make rollback-api` / `make rollback-web` |
 | Edit production settings | `ssh hossam@35.226.179.10 'nano /opt/rocket/.env'`, then `sudo systemctl restart rocket-api` |
+| API workers / threads | `GUNICORN_WORKERS` and `GUNICORN_THREADS` in `/opt/rocket/.env` (both 1), then restart `rocket-api` |
 | Backups | `/opt/rocket/backups/db-*.sqlite3.gz` (14 days) |
 
 ## Files on the VM

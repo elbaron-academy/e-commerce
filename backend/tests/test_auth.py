@@ -146,3 +146,48 @@ def test_addresses_default_rules(customer_api, customer):
 def test_endpoints_require_auth(api):
     for path in ("/api/v1/me/", "/api/v1/addresses/", "/api/v1/orders/"):
         assert api.get(path).status_code == 401
+
+
+def test_otp_cannot_open_staff_accounts(api, staff):
+    api.post(SEND, {"phone": staff.phone})
+    res = api.post(VERIFY, {"phone": staff.phone, "code": "1234"})
+    assert res.status_code == 403 and res.json()["code"] == "staff_account"
+
+
+def test_ensure_admin_and_email_login(api, client):
+    from django.core.management import call_command
+
+    call_command("ensure_admin", email="Admin@GM.com", password="admin", verbosity=0)
+    admin = User.objects.get(email="admin@gm.com")
+    assert admin.is_superuser and admin.is_staff and admin.phone.startswith("0100000")
+
+    # Staff API login with email
+    res = api.post("/api/v1/admin/auth/login/", {"login": "admin@gm.com", "password": "admin"})
+    assert res.status_code == 200 and res.json()["user"]["phone"] == admin.phone
+    assert api.post("/api/v1/admin/auth/login/", {"login": "admin@gm.com", "password": "nope"}).status_code == 401
+
+    # Django admin login page with email
+    page = client.post("/admin/login/?next=/admin/", {"username": "admin@gm.com", "password": "admin"})
+    assert page.status_code == 302 and page.url == "/admin/"
+
+    # Running it again updates the same account
+    call_command("ensure_admin", email="admin@gm.com", password="New-Pass-2026!", verbosity=0)
+    assert User.objects.filter(email="admin@gm.com").count() == 1
+    admin.refresh_from_db()
+    assert admin.check_password("New-Pass-2026!")
+
+
+def test_email_login_ignores_customers(api, customer):
+    customer.email = "mona@example.com"
+    customer.set_password("Customer-pass1")
+    customer.save()
+    assert (
+        api.post("/api/v1/admin/auth/login/", {"login": "mona@example.com", "password": "Customer-pass1"}).status_code
+        == 401
+    )
+
+
+def test_gunicorn_defaults():
+    from config import gunicorn
+
+    assert (gunicorn.workers, gunicorn.threads, gunicorn.bind) == (1, 1, "127.0.0.1:8000")

@@ -33,6 +33,21 @@ if grep -qi '^SEED_DEMO=true' "$APP/.env"; then
   "$PY" manage.py seed_demo --if-empty
 fi
 
+echo "==> systemd service files"
+units_changed=0
+for unit in "$DEST"/deploy/systemd/*; do
+  target="/etc/systemd/system/$(basename "$unit")"
+  rendered="$(sed "s/__USER__/$(whoami)/g" "$unit")"
+  if ! printf '%s\n' "$rendered" | cmp -s - "$target"; then
+    if printf '%s\n' "$rendered" | sudo -n tee "$target" >/dev/null; then
+      echo "updated $(basename "$unit")"; units_changed=1
+    else
+      echo "!! Could not update $target (no sudo rights). Run the Server setup workflow."
+    fi
+  fi
+done
+if [ "$units_changed" = 1 ]; then sudo -n systemctl daemon-reload; fi
+
 echo "==> Switching to the new release"
 # A real directory left from a manual install is moved aside, not deleted.
 for link in backend deploy; do

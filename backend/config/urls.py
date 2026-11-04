@@ -4,9 +4,11 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
+from apps.accounts.forms import StaffLoginForm
 from apps.core.views import health
 
 admin.site.site_header = "Rocket Market"
+admin.site.login_form = StaffLoginForm
 admin.site.site_title = "Rocket Market admin"
 
 urlpatterns = [

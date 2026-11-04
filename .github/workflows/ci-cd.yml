@@ -96,29 +96,49 @@ jobs:
         with:
           name: storefront-build
       - name: Package backend
-        run: git archive --format=tar.gz -o backend.tgz HEAD backend deploy
-      - uses: ./.github/actions/ssh-setup
+        run: |
+          git archive --format=tar.gz -o backend.tgz HEAD backend deploy
+          echo "RELEASE=${GITHUB_SHA::12}" >> "$GITHUB_ENV"
+      - id: ssh
+        uses: ./.github/actions/ssh-setup
         with:
           host: ${{ env.DEPLOY_HOST }}
           user: ${{ env.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           known_hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+      - name: Set up the server (first deploy, or until HTTPS certificates exist)
+        run: |
+          check='test -d /opt/rocket/incoming && test -x /opt/rocket/venv/bin/python'
+          for d in rocket.hossam-ameen.online api.rocket.hossam-ameen.online; do
+            check="$check && sudo -n test -f /etc/letsencrypt/live/$d/fullchain.pem"
+          done
+          if ssh rocket "$check" 2>/dev/null; then
+            echo "Server is set up."
+          else
+            ssh rocket 'rm -rf /tmp/rocket-setup' && scp -rq deploy rocket:/tmp/rocket-setup
+            .github/scripts/run.sh "Server setup" ssh rocket 'sudo -n DEPLOY_USER=$(whoami) bash /tmp/rocket-setup/scripts/server-setup.sh'
+          fi
       - name: Upload release
         run: |
-          RELEASE="${GITHUB_SHA::12}"
-          echo "RELEASE=$RELEASE" >> "$GITHUB_ENV"
-          ssh rocket 'test -d /opt/rocket/incoming' || {
-            echo "::error::The server isn't set up yet. Run the 'Server setup' workflow once (see deploy/README.md)."
-            exit 1
-          }
           scp -q backend.tgz "rocket:/opt/rocket/incoming/backend-$RELEASE.tgz"
           scp -q storefront-build.tgz "rocket:/opt/rocket/incoming/storefront-$RELEASE.tgz"
       - name: Deploy backend
-        run: ssh rocket "bash -s -- $RELEASE" < deploy/scripts/deploy-backend.sh
+        run: .github/scripts/run.sh "Deploy backend" bash -c 'ssh rocket "bash -s -- $RELEASE" < deploy/scripts/deploy-backend.sh'
       - name: Deploy storefront
-        run: ssh rocket "bash -s -- $RELEASE" < deploy/scripts/deploy-storefront.sh
-      - name: Smoke test over HTTPS
-        continue-on-error: true  # passes once DNS and certificates are in place
+        run: .github/scripts/run.sh "Deploy storefront" bash -c 'ssh rocket "bash -s -- $RELEASE" < deploy/scripts/deploy-storefront.sh'
+      - name: Server report
+        if: always() && steps.ssh.outcome == 'success'
         run: |
-          curl -fsS --retry 5 --retry-delay 3 "$API_URL/api/health/"
-          curl -fsS -o /dev/null --retry 5 --retry-delay 3 "$WEB_URL/" && echo "storefront OK"
+          encode() { sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}'; }
+          resolve() { (dig +short A "$1" @1.1.1.1 2>/dev/null || getent ahostsv4 "$1" | awk '{print $1}') | sort -u | tr '\n' ' '; }
+          web_ip="$(resolve rocket.hossam-ameen.online)"
+          api_ip="$(resolve api.rocket.hossam-ameen.online)"
+          dns_ok=$([ "${web_ip% }" = "$DEPLOY_HOST" ] && [ "${api_ip% }" = "$DEPLOY_HOST" ] && echo "✓ both point to the VM" || echo "✗ expected $DEPLOY_HOST")
+          echo "::notice title=DNS::rocket.hossam-ameen.online → ${web_ip:-no record} · api.rocket.hossam-ameen.online → ${api_ip:-no record} · $dns_ok"
+          web="$(curl -s -o /dev/null -w '%{http_code}' -m 15 "$WEB_URL/" || true)"
+          api="$(curl -s -m 15 "$API_URL/api/health/" || true)"
+          http_api="$(curl -s -o /dev/null -w '%{http_code}' -m 15 "http://api.rocket.hossam-ameen.online/api/health/" || true)"
+          echo "::notice title=Public URLs::$WEB_URL → HTTP ${web:-000} · $API_URL/api/health/ → ${api:-no answer} · plain HTTP API → ${http_api:-000}"
+          report="$(ssh rocket 'bash -s' < .github/scripts/server-report.sh 2>&1 || true)"
+          printf '%s\n' "$report"
+          echo "::notice title=Server::$(printf '%s\n' "$report" | encode)"

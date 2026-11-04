@@ -10,9 +10,9 @@ Group=www-data
 WorkingDirectory=/opt/rocket/backend
 Environment=DJANGO_SETTINGS_MODULE=config.settings.prod
 Environment=DJANGO_ENV_FILE=/opt/rocket/.env
-ExecStart=/opt/rocket/venv/bin/gunicorn config.wsgi:application \
-    --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 60 \
-    --access-logfile - --error-logfile -
+# GUNICORN_WORKERS / GUNICORN_THREADS (default 1 / 1) can be set in /opt/rocket/.env
+EnvironmentFile=-/opt/rocket/.env
+ExecStart=/opt/rocket/venv/bin/gunicorn config.wsgi:application --config python:config.gunicorn
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always
 RestartSec=3

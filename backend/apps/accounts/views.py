@@ -74,13 +74,20 @@ class OTPVerifyView(APIView):
         phone = data.validated_data["phone"]
         otp.verify_otp(phone, data.validated_data["code"])
         user, _ = User.objects.get_or_create(phone=phone)
+        if user.is_staff:
+            # Staff sign in with a password; a phone code must never open a staff account.
+            raise ApiError(
+                t("حسابات الموظفين بتدخل بكلمة السر.", "Staff accounts sign in with a password."),
+                status_code=403,
+                code="staff_account",
+            )
         if not user.is_active:
             raise ApiError(t("الحساب ده موقوف.", "This account is disabled."), status_code=403, code="account_disabled")
         return Response({**issue_tokens(user), "user": UserSerializer(user).data, "is_new": not user.name})
 
 
 class StaffLoginView(APIView):
-    """Staff sign-in for the admin dashboard (phone + password)."""
+    """Staff sign-in for the admin dashboard: phone or email + password."""
 
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -89,19 +96,17 @@ class StaffLoginView(APIView):
 
     @extend_schema(
         request=inline_serializer(
-            "StaffLogin", {"phone": serializers.CharField(), "password": serializers.CharField()}
+            "StaffLogin",
+            {"login": serializers.CharField(help_text="Phone or email"), "password": serializers.CharField()},
         ),
         responses=AuthTokensSerializer,
     )
     def post(self, request):
-        from apps.core.text import normalize_phone
-
-        user = authenticate(
-            request, phone=normalize_phone(request.data.get("phone", "")), password=request.data.get("password", "")
-        )
+        login = request.data.get("login") or request.data.get("email") or request.data.get("phone") or ""
+        user = authenticate(request, username=str(login), password=str(request.data.get("password", "")))
         if not user or not user.is_staff:
             raise ApiError(
-                t("بيانات الدخول غلط.", "Invalid phone or password."), status_code=401, code="invalid_credentials"
+                t("بيانات الدخول غلط.", "Invalid login or password."), status_code=401, code="invalid_credentials"
             )
         return Response({**issue_tokens(user), "user": UserSerializer(user).data, "is_new": False})
 

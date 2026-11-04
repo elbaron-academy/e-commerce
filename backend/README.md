@@ -20,7 +20,7 @@ make api               # http://localhost:8000/api/docs/
 `make dev` runs the API and the storefront together. `make test` runs the tests (87 tests, 95% coverage).
 
 Demo login: any Egyptian mobile number, code `1234`. Coupons: `ROCKET10`, `SAVE50`, `FREESHIP`.
-Admin: `make superuser`, then sign in at http://localhost:8000/admin/.
+Admin: `python manage.py ensure_admin --email you@example.com --password '…'` (or `make superuser`), then sign in at http://localhost:8000/admin/ with the email or phone.
 
 ## Apps
 

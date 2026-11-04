@@ -67,7 +67,7 @@ systemctl enable --now rocket-jobs.timer rocket-backup.timer >/dev/null
 log "Allowing $DEPLOY_USER to restart the Rocket services (for CI/CD)"
 SYSTEMCTL="$(command -v systemctl)"
 cat > /etc/sudoers.d/rocket-deploy <<SUDO
-$DEPLOY_USER ALL=(root) NOPASSWD: $SYSTEMCTL restart rocket-api, $SYSTEMCTL restart rocket-web, $SYSTEMCTL reload nginx, $SYSTEMCTL status rocket-api, $SYSTEMCTL status rocket-web
+$DEPLOY_USER ALL=(root) NOPASSWD: $SYSTEMCTL restart rocket-api, $SYSTEMCTL restart rocket-web, $SYSTEMCTL reload nginx, $SYSTEMCTL status rocket-api, $SYSTEMCTL status rocket-web, $SYSTEMCTL daemon-reload, $(command -v tee) /etc/systemd/system/rocket-*
 SUDO
 chmod 440 /etc/sudoers.d/rocket-deploy
 visudo -cf /etc/sudoers.d/rocket-deploy >/dev/null
